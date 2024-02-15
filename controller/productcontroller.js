@@ -100,6 +100,7 @@ module.exports={
             console.log(error);
         }
     },
+    
     deleteproduct: async (req,res)=>{
         try {
             const _id = req.params.id

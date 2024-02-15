@@ -8,7 +8,7 @@ module.exports = {
 
     loadbanner :async(req,res)=>{
         try {
-            const banner = await Banner.find({})
+            const banner = await Banner.find()
             res.render('admin/banner',{banner})
         } catch (error) {
             console.log(error);
@@ -25,21 +25,37 @@ module.exports = {
         try {
             const {title,description,targeturl}=req.body
             console.log(req.body);
+            console.log(req.file);
             const imageFile = req.file.filename
 
-            const baner = await new Banner({
+            const banner = new Banner({
                 title,
                 description,
                 image:imageFile,
                 targeturl
             })
 
-            await baner.save()
+            await banner.save()
 
             res.redirect('/admin/banner')
 
 
         } catch (error) {
+            console.log(error);
+        }
+    },
+
+    deletebanner: async (req,res)=>{
+        try {
+            const _id = req.params.id
+            console.log(_id);
+
+            await Banner.deleteOne({_id:_id})
+
+            res.status(200).json({message:"banner deleted successfully"})
+
+        } catch (error) {
+            res.status(500).json({message:"Internal server error"})
             console.log(error);
         }
     }

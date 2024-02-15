@@ -12,18 +12,21 @@ const storage = multer.diskStorage({
   })
 
   const BannerStorege = multer.diskStorage({
-    destination: "public/assets/images/banner",
 
+    destination: function (req, file, cb) {
+      cb(null, './public/assets/images/banner')
+    },
     filename:(req,file,cb)=>{
-      const filename = file.originalname
-      cb(null,filename)
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.fieldname + '-' + uniqueSuffix)
     }
-  })
+  })    
   
   const upload = multer({ storage: storage })
-  const uploadBanner =multer({storege:BannerStorege})
 
-  module.exports = {
+  const uploadBanner =multer({storage:BannerStorege})
+
+  module.exports = {  
              upload,
              uploadBanner
   }

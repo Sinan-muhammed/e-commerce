@@ -52,9 +52,10 @@ router.delete('/deleteproduct/:id',productCantrollers.deleteproduct)
 
 router.get('/banner',bannerControllers.loadbanner)
 router.get('/addbanner',bannerControllers.addbannerGet)
-router.post('/addbanner',uploadBanner.single('image'),bannerControllers.addbannerPost)
+router.post('/addbanner',uploadBanner.single('bannerImg'),bannerControllers.addbannerPost)
 // router.get('/banner/editbanner',editbannerGET)
 // // router.post('/banner/editbanner',editbannerGET)
+router.delete('/deletebanner/:id',bannerControllers.deletebanner)
 
 // router.get('/orders',ordersGET)
 // router.get('/orders/showorders',showorderGET)
