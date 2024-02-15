@@ -18,14 +18,13 @@ module.exports = {
         try {
             res.render('admin/addbanner')
         } catch (error) {
+            res.status(500).json({message:"Internal server error"})
             console.log(error);
         }
     },
     addbannerPost : async (req,res)=>{
         try {
             const {title,description,targeturl}=req.body
-            console.log(req.body);
-            console.log(req.file);
             const imageFile = req.file.filename
 
             const banner = new Banner({
@@ -41,6 +40,7 @@ module.exports = {
 
 
         } catch (error) {
+            res.status(500).json({message:"Internal server error"})
             console.log(error);
         }
     },
@@ -48,7 +48,6 @@ module.exports = {
     deletebanner: async (req,res)=>{
         try {
             const _id = req.params.id
-            console.log(_id);
 
             await Banner.deleteOne({_id:_id})
 
@@ -57,6 +56,45 @@ module.exports = {
         } catch (error) {
             res.status(500).json({message:"Internal server error"})
             console.log(error);
+        }
+    },
+
+    editbannerGet:async (req,res)=>{
+        try {
+
+            const id=req.query.id
+            const data = await Banner.findById(id)
+
+            if(data){
+                res.render(`admin/editbanner`,{data})
+            }
+            
+        } catch (error) {
+            res.status(500).json({message:"Internal server error"})
+           console.log(error);
+        }
+    },
+
+    editbannerPost: async (req,res)=>{
+        try {
+            
+            const _id = req.query.id
+            const {title,description,targeturl}=req.body
+            const imageFile = req.file.filename
+
+            await Banner.findByIdAndUpdate({_id},{
+                title,
+                description,
+                image: imageFile,
+                targeturl,
+            })  
+
+            res.redirect("/admin/banner")
+
+        } catch (error) {
+            res.status(500).json({message:"Internal server error"})
+            console.log(error);
+
         }
     }
 

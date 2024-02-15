@@ -80,9 +80,7 @@ module.exports={
             
             const imageFile = req.files.map((file)=> file.filename)
             console.log(imageFile);
-
-            
-
+  
             await Product.findByIdAndUpdate({_id},{
                 name,
                 quantity,
