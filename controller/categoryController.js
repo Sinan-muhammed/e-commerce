@@ -75,7 +75,7 @@ module.exports={
         try {
            const categoryData = await Category.findById({_id:req.body.id})
            const exist = await Category.findOne({ name :req.body.name})
-           console.log("nbcdbc");
+           
            if(exist){
              return  res.render('admin/editcategory',{message:'Duplicates is not allowed!',categoryData})
            }

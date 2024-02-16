@@ -4,6 +4,7 @@ const adminCantrollers  = require('../controller/adminController')
 const categoryCantrollers = require("../controller/categoryController")
 const productCantrollers = require("../controller/productcontroller")
 const bannerControllers = require('../controller/bannerContrller')
+const couponControllers = require('../controller/couponController')
 const {upload,uploadBanner} = require('../middlewares/multer')
 
 
@@ -41,13 +42,13 @@ router.post('/editProduct',upload.array('image1', 20),productCantrollers.editpro
 router.delete('/deleteproduct/:id',productCantrollers.deleteproduct)
 
 
-// router.get('/coupons',couponGET)
+router.get('/coupon',couponControllers.couponhome)
 
-// router.get('/coupons/addcoupons',addcouponGET)
-// // router.post('/coupons/addcoupons',adminRouter)
-// router.get('/coupons/editcoupons',editcouponGET)
-// // router.post('/coupons/editcoupons',addcouponGET)
-// // router.delete('/coupons/deletecoupons',adminRouter)
+router.get('/addcoupon',couponControllers.addcouponGet)
+router.post('/addcoupon',couponControllers.addcouponPost)
+router.get('/editcoupon',couponControllers.editCouponGet)
+router.post('/editcoupon',couponControllers.editCouponPost)
+router.delete('/deletecoupon/:id',couponControllers.deleteCouponGet)
 
 
 router.get('/banner',bannerControllers.loadbanner)

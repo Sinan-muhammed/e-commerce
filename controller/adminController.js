@@ -9,11 +9,13 @@ const { name } = require('ejs')
 
 
 module.exports={
-    adminLoginGET:(req,res)=>{
+
+    adminLoginGET: async (req,res)=>{
         const message = []
           res.render('admin/admin-login',{message})
     },
-    adminDashboardGET:(req,res)=>{
+
+    adminDashboardGET: async (req,res)=>{
         const totalRevenueNumber=[]
         const ordercount=[]
         const productcount=[]
@@ -24,13 +26,13 @@ module.exports={
         res.render('admin/dashboard',{totalRevenueNumber,order,ordercount,productcount,monthlyRevenueNumber,categorycount})
     },
     usersGET:(req,res)=>{
-        const users=[]
+        const users= await
         res.render('users',{users})
     },
     reportGET:(req,res)=>{
         const {startDate,endDate}= new Date
         const order=[]
-        const product=[]
+        const product=[]      
         
         try {
             res.render('report',{startDate,endDate,order,product})
