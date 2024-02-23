@@ -67,9 +67,9 @@
                     </div>
 
                     <div class="header-right">
-                        <% if (locals.user) { %>
+                        <% if (locals.email) { %>
                             <div>
-                                <a href="/account">
+                                <a href="/account?<%= locals %>">
                                     <div class="icon">
                                         <i class="icon-user " style="font-size: 30px; color: #000;"></i>
                                     </div>
@@ -84,11 +84,11 @@
                         <% } %>
 
                         <div class="dropdown cart-dropdown">
-                            <% if(locals.user){ %>
+                            <% if(locals.email){ %>
                                 <a href="/cart" class="dropdown-toggle" >
                                     <div class="icon">
                                         <i class="icon-shopping-cart"></i>
-                                        <span class="cart-count"><%= cart?.product?.length || 0 %></span>
+                                        <span class="cart-count"><%= cart.product.length || 0 %></span>
                                     </div>
                                     <p>Cart</p>
                                 </a>
@@ -162,7 +162,6 @@
             
             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="5000">
                 <ol class="carousel-indicators">
-    
                     <% banner.forEach(function(banner, index) { %>
                         <li data-target="#carouselExampleIndicators" data-slide-to="<%= index %>" <%= index === 0 ? 'class="active"' : '' %>></li>
                     <% }); %>

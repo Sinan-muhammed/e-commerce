@@ -50,4 +50,4 @@ signupSchema.pre('save',async function (next){
   }
 })
 
-module.exports =mongoose.model('signupData',signupSchema)
+module.exports = mongoose.model('signupData',signupSchema)

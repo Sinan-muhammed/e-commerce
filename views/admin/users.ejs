@@ -198,7 +198,7 @@
                                         </thead>
                                         <tbody>
                                             <% for (let i = 0; i < users.length; i++) { %>
-                                                <% if (users[i].is_admin == false) { %>
+                                                <% if (users[i]) { %>
                                                     <tr>
                                                         <td align="center">
                                                             <%= i %>

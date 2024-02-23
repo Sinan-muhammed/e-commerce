@@ -25,10 +25,18 @@ module.exports={
 
         res.render('admin/dashboard',{totalRevenueNumber,order,ordercount,productcount,monthlyRevenueNumber,categorycount})
     },
-    usersGET:(req,res)=>{
-        const users= await
-        res.render('users',{users})
+
+    usersGET:async (req,res)=>{
+        try {
+
+            const users= await userData.find()
+        res.render('admin/users',{users})
+            
+        } catch (error) {
+            console.log(error);
+        }
     },
+
     reportGET:(req,res)=>{
         const {startDate,endDate}= new Date
         const order=[]
@@ -41,74 +49,10 @@ module.exports={
         }
     },
   
-    couponGET:(req,res)=>{
+    orderGet: async (req,res)=>{
         try {
-            const coupon=[]
-            res.render('admin/coupon',{coupon})
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    addcouponGET:(req,res)=>{
-        try {
-            res.render('admin/addcoupon')
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    editcouponGET:(req,res)=>{
-        try {
-            const coupon=[]
-            res.render('admin/editcoupon',{coupon})
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    bannerGET:(req,res)=>{
-        try {
-            const banner =[]
-            res.render('admin/banner',{banner})
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    addbannerGET:(req,res)=>{
-        try {
-            res.render('admin/addbanner')
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    editbannerGET:(req,res)=>{
-        try {
-            const data=[]
-            res.render('admin/editbanner',{data})
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    adminLogout:(req,res)=>{
-        try {
-            res.redirect('/admin')
-        } catch (error) {
-           console.log(error); 
-        }
-    },
-    ordersGET:(req,res)=>{
-        try {
-            
-            
-            res.render('order',{order})
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    showorderGET:(req,res)=>{
-        try {
-            const product=[]
-            const id=[]
             const order=[]
-            res.render('showorder',{order,id})
+            res.render('admin/order',{order})
         } catch (error) {
             console.log(error);
         }

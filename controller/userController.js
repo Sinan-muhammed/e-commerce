@@ -3,35 +3,53 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("connect-flash");
 const userData = require("../models/signupModel");
+const Cart    = require('../models/cartModel')
+const Banner  = require('../models/bannermodel')
 const objectID = require("mongodb").objectID;
 const { name } = require("ejs");
 
 const accountSid = "AC1985e94c73acdc5f1a3f408c8cad231a";
-const authToken = "c20bfd34480f476699e8b7d72f55ce92";
+const authToken = "507a2d6b03f5e7658f85d306de19b592";
 const verifySid = "VA2daca26d9d84268f6700c93859333e0e";
 const client = require("twilio")(accountSid, authToken);
 
 module.exports = {
-  homeGet: (req, res) => {
-    const bannerData = [];
-    res.render("user/home", { banner: bannerData });
+  homeGet: async (req, res) => {
+    try {
+
+      if(req.session.userId){
+        const locals =await userData.findOne({_id:req.session.userId})
+
+        const cart= await Cart.findOne({user:req.session.userId})
+        const banner = await Banner.find({}) ;
+        res.render("user/home", { banner,locals,cart});
+
+      }
+      else{
+        res.redirect('/login')
+      }
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   loginGET: (req, res) => {
     const email = req.query.email;
-    console.log(email);
 
     res.render(`user/login`, { email });
   },
 
   loginpost: async (req, res) => {
-    const queryemail = await req.query.email;
-    console.log(queryemail);
 
+    const queryemail = await req.query.email;
+   
     try {
       const { email, password } = req.body;
-      console.log(email);
       const user = await userData.findOne({ email: email });
+
+
+      req.session.userId = user._id
+      console.log(req.session.userId);
 
       if (user) {
         if (user.is_verified === true) {
@@ -40,7 +58,6 @@ module.exports = {
           console.log(`otp verification cheyyathe thendi ${email}`);
           const USER = await userData.findOne({ email: email });
           const number = USER.mobile;
-          console.log(number);
           res.redirect(`/verifyotp?email=${email}&number=${number}`);
           client.verify.v2
             .services(verifySid)
@@ -195,4 +212,45 @@ module.exports = {
         .send(error?.message || "something went rong");
     }
   },
+
+  loadForgetGet: async (req,res)=>{
+    try {
+      res.render("user/forgot")
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  loadResetPassword: async (req,res)=>{
+    try {
+      res.render('user/resetPassword',{token:''})
+    } catch (error) {
+      console.log(error);
+    }
+  },
+ 
+  loadAbout: async (req,res)=>{
+    try {
+      res.render('user/about')
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  loadfaq: async (req,res)=>{
+    try {
+      res.render('user/faq')
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  loadcontact: async (req,res)=>{
+    try {
+      res.render('user/contact')
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 };

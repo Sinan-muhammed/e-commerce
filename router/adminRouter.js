@@ -10,19 +10,19 @@ const {upload,uploadBanner} = require('../middlewares/multer')
 
 
 
-router.route('/').get(adminCantrollers.adminLoginGET)
+router.get('/',adminCantrollers.adminLoginGET)
 // router.post('/',adminRouter)
 
-router.route('/dashbord').get(adminCantrollers.adminDashboardGET)
+router.get('/dashboard',adminCantrollers.adminDashboardGET)
 
-// router.get('/users',usersGET)
+router.get('/users',adminCantrollers.usersGET)
 // // router.delete('/userList/deleteUser',adminRouter)
 
 // router.get('/report',reportGET)
 
-router.route('/category').get(categoryCantrollers.categoryGET)
+router.get('/category',categoryCantrollers.categoryGET)
 
-router.route('/addcategory').get(categoryCantrollers.addcategoryGET)
+router.get('/addcategory',categoryCantrollers.addcategoryGET)
 router.post('/addcategory',categoryCantrollers.addcategoryPOST)
 
 router.get('/editcategory',categoryCantrollers.editcategoryGET)
@@ -58,12 +58,10 @@ router.get('/editbanner',bannerControllers.editbannerGet)
 router.post('/editbanner',uploadBanner.single('image12'),bannerControllers.editbannerPost)
 router.delete('/deletebanner/:id',bannerControllers.deletebanner)
 
-// router.get('/orders',ordersGET)
+router.get('/order',adminCantrollers.orderGet)
 // router.get('/orders/showorders',showorderGET)
-// // router.post()
 
-
-router.get('/logout',adminCantrollers.adminLogout)
+// router.get('/logout',adminCantrollers.adminLogout)
 
 
 module.exports=router

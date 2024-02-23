@@ -92,13 +92,16 @@
     overflow: hidden;
 }
 
-
-
-.product-image-gallery {
+.product-details-top{
     display: flex;
 }
 
+.product-image-gallery {
+   display: flex;
+}
+
 .product-gallery-item {
+
     margin-right: 10px;
     cursor: pointer;
 }
