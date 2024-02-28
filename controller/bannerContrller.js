@@ -74,7 +74,7 @@ module.exports = {
            console.log(error);
         }
     },
-
+///
     editbannerPost: async (req,res)=>{
         try {
             

@@ -44,9 +44,10 @@ router.get('/product',productController.loadEachProduct)
 
 router.get('/cart',cartcantroller.loadCart)
 router.patch('/addtocart',cartcantroller.addtoCart)
-// router.delete('/cart/delete_item',userRouter)
+router.post('/updatecart',cartcantroller.updateCart)
+router.post('/removecartitem',cartcantroller.removeCartitem)
 
-router.get('/wishlist',productController.loadWishlistGet)
+router.get('/wishlist',)
 
 router.get('/account',productController.loadAccount)
 // router.post('/account/profile',userRouter)

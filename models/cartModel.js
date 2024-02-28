@@ -1,5 +1,5 @@
-const { ObjectId } = require('mongodb')
 const mongoose = require('mongoose')
+const { ObjectId } = require('mongodb')
 
 
 const cartSchema = new mongoose.Schema({
@@ -17,7 +17,7 @@ const cartSchema = new mongoose.Schema({
         quantity:{
             type:Number,
             default:1
-        },
+        },   
         price:{
             type:Number,
             default:0

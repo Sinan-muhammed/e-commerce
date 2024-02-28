@@ -75,11 +75,4 @@ module.exports={
         }
     },
 
-    loadWishlistGet: async (req,res)=>{
-        try {
-            res.render('user/wishlist')
-        } catch (error) {
-            console.log(error);
-        }
-    }
 }

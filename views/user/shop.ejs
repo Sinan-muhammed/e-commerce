@@ -517,50 +517,60 @@ async function handleSearchInput(event) {
   
 
 
-function addToCart(productId) {
-    $.ajax({
-        url: '/addtocart',
-        method: 'patch',
-        data: { productId },
-        success: function (response) {
-            console.log('Response from server:', response);
-
-            if (response.quantity == false) {
-                Swal.fire(
-                    'Out of Stock',
-                    response.error || 'Product is Out of stock',
-                    'warning'
-                );
-            }
-            
-            else if(response.session== false){
-                    Swal.fire({
-                    title: 'Login Required',
-                    text: response.error || 'You want to login.',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Login',
-                    cancelButtonText: 'Cancel',
-                });
-                
-            } else {
-                Swal.fire(
-                    'Saved to cart!',
-                    'Product added to cart successfully!',
-                    'success'
-                );
-            }
+  function addToCart(productId) {
+    fetch('/addtocart', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
         },
-        error: function (error) {
-            console.error('Error:', error);
+        body: JSON.stringify({ productId })
+    })
+    .then(response => response.json())
+    .then(response => {
+        console.log('Response from server:', response);
+        
+        if (response.quantity == false) {
             Swal.fire(
-                'Error',
-                'An error occurred while processing your request.',
-                'error'
+                'Out of Stock',
+                response.error || 'Product is Out of stock',
+                'warning'
+            );
+        } else if (response.session == false) {
+            Swal.fire({
+                title: 'Login Required',
+                text: response.error || 'You want to login.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Login',
+                cancelButtonText: 'Cancel',
+                
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    console.log('User clicked Login');
+                    window.location.href = '/login';
+                } else {
+                    console.log('User clicked Cancel');
+                }
+            });
+        } else {
+            Swal.fire(
+                'Saved to cart!',
+                'Product added to cart successfully!',
+                'success'
             );
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire(
+            'Error',
+            'An error occurred while processing your request.',
+            'error'
+        );
     });
 }
+
 
 
 </script>

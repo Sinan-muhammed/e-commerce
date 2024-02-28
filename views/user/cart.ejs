@@ -138,7 +138,7 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="home">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
                         <li class="breadcrumb-item"><a href="shop">Shop</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
                     </ol>
@@ -179,14 +179,14 @@
                                                             <div class="product">
                                                                 <figure class="product-media">
                                                                     <a href="/product?id=<%= product.productId._id %>">
-                                                                        <img src="/public/assets/images/products/<%= product.productId.images[0]%>"
+                                                                        <img src="/public/assets/images/products/<%=product.productId.images[0]%>"
                                                                             alt="Product image">
                                                                     </a>
                                                                 </figure>
 
                                                                 <h3 class="product-title">
                                                                     <a href="#">
-                                                                        <%= product.productId.name%>
+                                                                        <%= product.name%>
                                                                     </a>
                                                                 </h3><!-- End .product-title -->
                                                             </div><!-- End .product -->
@@ -197,14 +197,14 @@
                                                         <td class="quantity-col">
                                                             <div class="cart-product-quantity">
                                                                 <button class="quantity-control" type="button"
-                                                                    onclick="updateQuantity('<%= product.productId._id %>', -1)">-</button>
+                                                                    onclick="updateQuantity('<%= product.productId?._id %>', -1)">-</button>
                                                                     <input type="number" class="form-control"
                                                                     value="<%= product.quantity %>" min="1" max="10"
                                                                     step="1" data-decimals="0" disabled required
                                                                     style="text-align: center;">
                                                                 
                                                                 <button class="quantity-control" type="button"
-                                                                    onclick="updateQuantity('<%= product.productId._id %>', 1)">+</button>
+                                                                    onclick="updateQuantity('<%= product.productId?._id %>', 1)">+</button>
                                                             </div>
                                                         </td>
                                                         <td class="total-col">
@@ -212,7 +212,7 @@
                                                         </td>
                                                         <td class="remove-col">
                                                             <button class="btn-remove"
-                                                                onclick="removecartitem('<%= product.productId._id %>')"><i
+                                                                onclick="removecartitem('<%= product.productId?._id %>')"><i
                                                                     class="icon-close"></i></button>
                                                         </td>
                                                     </tr>
@@ -363,6 +363,7 @@
                     if (response.success) {
                         $("#reloadDiv").load("/cart #reloadDiv");
                     } else {
+                        console.log(response);
                         // Handle other cases or errors here
                         swal.fire({
                             icon: "error",
@@ -390,15 +391,16 @@
                             text: "The item has been successfully removed from your cart.",
                             icon: "success",
                             showConfirmButton: false,
-                            timer: 5000,
+                            timer: 1000,
                         });
                         setTimeout(() => {
                             location.reload(); // Reload the page
-                        }, 1500);
-                    } else {
-                        // Handle error
-                        console.error('Error removing item:', response.error);
+                        }, 1000);
                     }
+                    else{
+                        console.error('Error removing item:',response.error)
+                    }
+                
                 })
                 .catch(error => {
                     console.error('Error removing item:', error);
