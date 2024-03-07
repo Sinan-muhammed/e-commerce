@@ -6,6 +6,10 @@ const productController = require('../controller/clientSideproductController')
 const userController = require("../controller/userController");
 const Cartcontroller = require('../controller/cartcantroller');
 const cartcantroller = require("../controller/cartcantroller");
+const addresscontroller = require("../controller/addresscontroller");
+const wishlistController = require('../controller/wishlistCantroller')
+const Couponcontroller  = require('../controller/couponController')
+const OrderController   = require('../controller/ordercontrollers')
 
 // Configure session middleware
 router.use(
@@ -47,19 +51,28 @@ router.patch('/addtocart',cartcantroller.addtoCart)
 router.post('/updatecart',cartcantroller.updateCart)
 router.post('/removecartitem',cartcantroller.removeCartitem)
 
-router.get('/wishlist',)
+router.get('/wishlist',wishlistController.loadWishlist)
+router.patch('/addtowishlist',wishlistController.addtowishlist)
+router.post('/removewishlist',wishlistController.removewishlist)
+
 
 router.get('/account',productController.loadAccount)
 // router.post('/account/profile',userRouter)
 
-router.get('/success',productController.loadSuccess)
+router.get('/success',addresscontroller.loadSuccess)
 // router.get('/account/orders',userRouter)
 
-router.get('/checkout',productController.loadCheckout)
-// router.post('/checkout',userRouter)
+router.get('/checkout',cartcantroller.loadCheckout)
+router.post('/addaddress',addresscontroller.addaddress)
+router.post('/addaddresses',addresscontroller.addaddressprofile)
+router.delete('/deleteaddress',addresscontroller.deleteaddress)
+router.post('/editaddresses',addresscontroller.editaddress)
+
+router.post('/placeorder',OrderController.placeorder)
 
 router.get('/orderdetails',productController.loadOrderDetails)
-// router.post('/payment',userRouter)
+
+router.post('/checkcoupon',Couponcontroller.checkcoupon)
 
 router.get('/about',userController.loadAbout)
 router.get('/faq',userController.loadfaq)

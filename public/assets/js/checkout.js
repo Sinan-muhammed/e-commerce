@@ -159,14 +159,20 @@ if (phone === '') {
 
   });
 
+  console.log('kjdfhgiudsf');
 	   
-
-    $(document).ready(function () {
-    $("#placeOrderBtn").on("click", function (event) {
+  async function PlaceOrder(){
+    console.log('Reachrdd');
+        var subtotalElement = document.getElementById("subtotal");
+        var subtotal = parseFloat(subtotalElement.innerText.replace('₹',''));
+        var totalamountElement = document.getElementById('totalamount');
+        var totalamount = parseFloat(totalamountElement.innerText.replace('₹', ''));
         var formData = $("#orderForm").serialize();
-        event.preventDefault();
 
-        console.log(formData,"is getting")
+        formData += '&totalamount=' + encodeURIComponent(totalamount);
+        formData += '&subtotal=' + encodeURIComponent(subtotal);
+        
+        console.log(formData, "is getting", totalamount,typeof(totalamount));
         $.ajax({
             type: "POST",
             url: "/placeorder",
@@ -174,11 +180,9 @@ if (phone === '') {
             success: function (response) {
                 console.log(response);
                 if (response.placed == true) {
-                    window.location.href = '/success';
-                }else if(response.wallet == false){
-                        swal.fire("Oops, it looks like your wallet balance is too low to place this order !!", "", "error")
-                    }
-				 else {
+                    const id = response.orderId;
+                    window.location.href = `/success`;
+                } else {
                     razorpayPayment(response.order);
                 }
             },
@@ -187,8 +191,8 @@ if (phone === '') {
                 alert("An error occurred while processing the order.");
             }
         });
-    });
-});
+    }
+
 
 function razorpayPayment(order) {
     console.log(order,"tihiu");
@@ -220,7 +224,7 @@ function razorpayPayment(order) {
     rzp1.open();
 }
 
-function verifyPayment(payment, order) {
+function verifyPayment(payment, order,) {
 
     $.ajax({
         url: "/verifypayment",

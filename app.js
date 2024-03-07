@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = 3001 ;
 const mongoose = require("mongoose");
+require('dotenv').config()
 
 const path = require("path");
 
@@ -27,3 +28,4 @@ mongoose
   .catch((err) => console.log("Error in database Connection", err));
 
 app.listen(port, () => console.log("server is running", port));
+//

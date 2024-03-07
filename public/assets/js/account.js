@@ -72,35 +72,40 @@ $(document).ready(function () {
             var formData = $('#addAddressForm').serialize();
             console.log(formData);
 
-            $.ajax({
-                type: 'POST',
-                url: '/addaddresses',
-                data: formData,
-                success: function (response) {
-                    console.log(response);
-                    if (response.add == true) {
-                        $('#addrassArea').load('/account #addrassArea');
-                        $('#addAddressModal').modal('hide');
-                        $('.modal-backdrop').remove();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Address Added Successfully',
-                            text: 'Your address has been added successfully.',
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'There was a problem adding your address!',
-                        });
-                    }
-                },
-                error: function (error) {
-                    console.error('Error:', error);
+            fetch('/addaddresses', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.add == true) {
+                    $('#addrassArea').load('/account #addrassArea');
+                    $('#addAddressModal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Address Added Successfully',
+                        text: 'Your address has been added successfully.',
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'There was a problem adding your address!',
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         }
     });
+
+
 
 	function validateForm() {
     var fullName = $('#fullName').val().trim();

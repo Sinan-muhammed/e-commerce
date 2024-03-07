@@ -145,15 +145,15 @@
 										<div class="user-profile text-center bg-light p-4 rounded">
 											<h3 class="mb-3">
 												<strong>
-													<%= userData.name %>
+													<%= userData?.name %>
 												</strong>
 											</h3>
 											<p class="mb-3">
 												Mobile Number: <span id="mobileNumber" class="text-info">
-													<%= userData.mobile %>
+													<%= userData?.mobile %>
 												</span><br>
 												Gmail: <span id="gmail" class="text-info">
-													<%= userData.email %>
+													<%= userData?.email %>
 												</span>
 											</p>
 											<div class="mb-3">
@@ -315,25 +315,25 @@
 										  <div class="row mb-4">
 											<div class="col ">
 											  <h3>Current Balance</h3>
-											  <p class="display-4 text-success">₹<span id="wallet-balance"><%= userData.wallet %></span></p>
+											  <p class="display-4 text-success">₹<span id="wallet-balance"><%= userData?.wallet %></span></p>
 											</div>
 											<div class="col text-right">
 											  <button id="rechargeBtn" class="btn btn-primary">Recharge Wallet</button>
 											</div>
 										  </div>
 									  
-										  <% if (userData.walletHistory && userData.walletHistory.length > 0) { %>
+										  <% if (userData?.walletHistory && userData?.walletHistory?.length > 0) { %>
 											<div class="list-group">
-											  <% for (let i = userData.walletHistory.length - 1; i >= 0; i--) { %>
+											  <% for (let i = userData?.walletHistory?.length - 1; i >= 0; i--) { %>
 												<div class="list-group-item">
 												  <div class="d-flex w-100 justify-content-between">
-													<p class="mb-1"><strong>Date:</strong> <%= userData.walletHistory[i].date.toISOString().split('T')[0] %></p>
-													<% if (userData.walletHistory[i].amount > 0) { %>
+													<p class="mb-1"><strong>Date:</strong> <%= userData?.walletHistory[i].date.toISOString().split('T')[0] %></p>
+													<% if (userData?.walletHistory[i].amount > 0) { %>
 													  <p class="mb-1 text-success">Credited</p>
 													<% } else { %>
 													  <p class="mb-1 text-danger">Debited</p>
 													<% } %>
-													<p class="mb-1"><strong>Amount:</strong> ₹<%= userData.walletHistory[i].amount %></p>
+													<p class="mb-1"><strong>Amount:</strong> ₹<%= userData?.walletHistory[i].amount %></p>
 												  </div>
 												</div>
 											  <% } %>
@@ -514,17 +514,17 @@
 					<form action="/edituser" method="post" id="editProfileForm">
 						<div class="form-group">
 							<label for="editName">Name:</label>
-							<input type="text" class="form-control" value="<%= userData.name %>" id="editName"
+							<input type="text" class="form-control" value="<%= userData?.name %>" id="editName"
 								name="editname" placeholder="Enter your name">
 						</div>
 						<div class="form-group">
 							<label for="editPhone">Phone:</label>
-							<input type="tel" class="form-control" value="<%= userData.mobile %>" id="editPhone"
+							<input type="tel" class="form-control" value="<%= userData?.mobile %>" id="editPhone"
 								name="editmobile" placeholder="Enter your phone number">
 						</div>
 						<div class="form-group">
 							<label for="editEmail">Email:</label>
-							<input type="email" class="form-control" value="<%= userData.email %>" id="editEmail"
+							<input type="email" class="form-control" value="<%= userData?.email %>" id="editEmail"
 								name="editemail" placeholder="Enter your email">
 						</div>
 						<button type="submit" class="btn btn-outline-warning">Save Changes</button>
@@ -547,7 +547,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form id="addAddressForm"  method="post" novalidate>
+					<form action="/addaddresses"  id="addAddressForm"  method="post" >
 						<div class="form-group">
 							<label for="fullName">Full Name:</label>
 							<input type="text" class="form-control" id="fullName" name="fullName" required>
@@ -580,12 +580,13 @@
 							<label for="email">Email:</label>
 							<input type="email" class="form-control" id="email" name="email" required>
 						</div>
-					</form>
+					
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 					<button type="button" class="btn btn-outline-warning" id="submitAddressBtn">Add Address</button>
 				</div>
+			</form>
 			</div>
 		</div>
 		</div>
@@ -607,8 +608,8 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<div class="modal-body">
-					<form id="addAddressForms">
+				<div  class="modal-body">
+					<form action="/editaddresses" id="addAddressForms">
 						<div class="form-group">
 							<label for="fullName">Full Name:</label>
 							<input type="text" class="form-control" id="fullNames" name="fullName" required>

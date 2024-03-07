@@ -70,7 +70,7 @@
                                 <a href="#">Links</a>
                                 <ul>
                                     <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
-                                    <li><a href="wishlist"><i class="icon-heart-o"></i>Wishlist <span>(3)</span></a>
+                                    <li><a href="wishlist"><i class="icon-heart-o"></i>Wishlist <span></span></a>
                                     </li>
                                     <li><a href="about">About Us</a></li>
                                     <li><a href="contact">Contact Us</a></li>
@@ -281,11 +281,15 @@ async function handleSearchInput(event) {
                                         <figure class="product-media">
                                             <% if (product.quantity > 7) { %>
                                                 <span class="product-label label-new">New</span>
-                                            <% } else if (product.quantity > 0) { %>
-                                                <span class="product-label label-orange">Only <%= product.quantity %> left</span>
-                                            <% } else { %>
-                                                <span class="product-label label-out-of-stock">Out of Stock</span>
-                                            <% } %>
+                                                <% } else if (product.quantity > 0) { %>
+                                                    <span class="product-label label-orange">Only <%= product.quantity %> left</span>
+                                                    <% } else { %>
+                                                        <span class="product-label label-out-of-stock">Out of Stock</span>
+                                                        <% } %>
+                                                        <!-- <a href="wishlist" class="whishlist"><i class="icon-heart-o"></i></a> -->
+                                            <a  class="whishlist"
+                                            onclick="addTowishlist('<%= product._id %>')"><i class="icon-heart-o" style="width: 20%;"></i></a>
+                                            
                                           <a href="/product?id=<%= product._id %>">
                                             <img src="/public/assets/images/products/<%=product.images[0] %>" alt="Product image" class="product-image">
                                           </a>
@@ -571,6 +575,60 @@ async function handleSearchInput(event) {
     });
 }
 
+
+
+function addTowishlist(productId) {
+    fetch('/addtowishlist', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId })
+    })
+    .then(response => response.json())
+    .then(response => {
+        console.log('Response from server:', response);
+        
+        if (response.quantity == false) {
+            Swal.fire(
+                'Out of Stock',
+                response.error || 'Product is Out of stock',
+                'warning'
+            );
+        } else if (response.session == false) {
+            Swal.fire({
+                title: 'Login Required',
+                text: response.error || 'You want to login.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Login',
+                cancelButtonText: 'Cancel',
+                
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    console.log('User clicked Login');
+                    window.location.href = '/login';
+                } else {
+                    console.log('User clicked Cancel');
+                }
+            });
+        } else {
+            Swal.fire(
+                'Saved to wishlist!',
+                'success'
+            );
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire(
+            'Error',
+            'An error occurred while processing your request.',
+            'error'
+        );
+    });
+}
 
 
 </script>

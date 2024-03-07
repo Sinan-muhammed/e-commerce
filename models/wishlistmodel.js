@@ -7,11 +7,21 @@ const wishlistItemSchema = new mongoose.Schema({
         ref:'signupData',
         required:true
     },
-    product :{
+    product :[{
+        productId:{
             type:ObjectId,
-            ref:'Product',
+            ref:"Product",
             required:true,
+        },
+        quantity:{
+            type:Number,
+            default:1
+        },
+        price:{
+            type:Number,
+            default:0
         }
+    }]
 })
 
 

@@ -91,17 +91,11 @@
 #zoom-container {
     overflow: hidden;
 }
-
-.product-details-top{
+.product-image-gallery {
     display: flex;
 }
 
-.product-image-gallery {
-   display: flex;
-}
-
 .product-gallery-item {
-
     margin-right: 10px;
     cursor: pointer;
 }

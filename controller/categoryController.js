@@ -17,7 +17,7 @@ module.exports={
     addcategoryGET:(req,res)=>{
         try {
             
-             
+             ///
             res.render('admin/addcategory')
         } catch (error) {
             console.log(error);

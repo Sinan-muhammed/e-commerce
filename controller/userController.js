@@ -5,6 +5,7 @@ const flash = require("connect-flash");
 const userData = require("../models/signupModel");
 const Cart    = require('../models/cartModel')
 const Banner  = require('../models/bannermodel')
+const Product = require('../models/productmodel')
 const objectID = require("mongodb").objectID;
 const { name } = require("ejs");
 
@@ -22,7 +23,8 @@ module.exports = {
 
         const cart= await Cart.findOne({user:req.session.userId})
         const banner = await Banner.find({}) ;
-        res.render("user/home", { banner,locals,cart});
+        const product = await Product.find()
+        res.render("user/home", { banner,locals,cart,product});
 
       }
       else{

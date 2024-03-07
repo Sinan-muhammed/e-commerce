@@ -1,4 +1,5 @@
 const Coupon = require("../models/couponmodel");
+const Cart = require('../models/cartModel')
 
 module.exports = {
   couponhome: async (req, res) => {
@@ -95,6 +96,40 @@ module.exports = {
         console.log('vggggv');
     } catch (error) {
         console.log(error);
+    }
+  },
+
+  checkcoupon : async(req,res)=>{
+    try {
+      const userId = req.session.userId
+      const couponcode = req.body.coupon
+      const currentDate = new Date()
+      const cartData = await Cart.findOne({user:userId})
+      const cartTotal = cartData.product.reduce((acc,val)=>acc+val.totalprice,0)
+      const coupondata = await Coupon.findOne({couponCode:couponcode})
+
+      if(coupondata){
+        if(currentDate >= coupondata.activationDate && currentDate <= coupondata.expiryDate){
+          const exists = coupondata.usedUsers.includes(userId)
+          if(!exists){
+            if(cartTotal>=coupondata.criteriaAmount){
+              await Coupon.findOneAndUpdate({couponCode:couponcode},{$push:{usedUsers:userId}})
+              await Cart.findOneAndUpdate({user:userId},{$set:{couponDiscount:coupondata._id}})
+              res.json({coupon:true})
+            }else{
+              res.json({coupon:'amountIssue'})
+            }
+          }else{
+            res.json({coupon:'used'})
+          }
+        }else{
+          res.json({coupon:'notAct'})
+        }
+      }else{
+        res.json({coupon:false})
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 };

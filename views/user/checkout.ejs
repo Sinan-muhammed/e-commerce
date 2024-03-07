@@ -35,6 +35,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 
 
 </head>
@@ -172,7 +174,7 @@
 			
 						<form id="orderForm">
 							<div class="row" style="justify-content: space-around;">
-								<%if(addresses.length <0){%>
+								<%if(addresses){%>
 									<% addresses?.address?.forEach(function (address, index) { %>
 										<div class="col-lg-4">
 											<div class="card card-dashboard">
@@ -213,42 +215,12 @@
 													<input type="text" class="form-control" id="streetAddress" name="housename">
 												</div>
 		
-												<div class="row">
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label for="stateCounty">State *</label>
-															<input type="text" class="form-control" id="stateCounty" name="state">
-														</div>
-													</div>
+								
+													
 											
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label for="townCity"> City *</label>
-															<input type="text" class="form-control" id="townCity" name="city">
-														</div>
-													</div>
-												</div>
+												
 											
-												<div class="row">
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label for="postcode">Pincode *</label>
-															<input type="text" class="form-control" id="postcode" name="pincode">
-														</div>
-													</div>
-											
-													<div class="col-sm-6">
-														<div class="form-group">
-															<label for="phone">Phone *</label>
-															<input type="tel" class="form-control" id="phone" name="phone">
-														</div>
-													</div>
-												</div>
-												<div class="form-group">
-													<label for="email">Email *</label>
-													<input type="email" class="form-control" id="email" name="email">
-												</div>
-											</div>
+													
 										<% } %>
 					
 
@@ -265,7 +237,7 @@
 													<th>Total</th>
 												</tr>
 											</thead>
-											<% cartData.product?.forEach(product=> { %>
+											<% cartData.product.forEach(product=> { %>
 
 											<tbody>
 												<tr>
@@ -276,7 +248,7 @@
 
 												<tr class="summary-subtotal">
 													<td>Subtotal:</td>
-													<td>₹<%= subtotal %></td>
+													<td id="subtotal">₹<%= subtotal %></td>
 												</tr>
 												<tr>
 													<td>Shipping:</td>
@@ -296,25 +268,7 @@
 										</table>
 
 										<div class="accordion-summary" id="accordion-payment">
-											<div class="card">
-												<div class="card-body">
-													<%if(cartData.user?.wallet>=discount){%>
-													<div class="d-flex align-items-center">
-														<div class="mr-2">
-															<input required type="radio"  id="walletRadio" name="payment" value="wallet" />
-														</div>
-														<label class="d-block text-dark" for="walletRadio">Wallet</label>
-													</div>
-													<%}else{%>
-														<div class="d-flex align-items-center">
-															<div class="mr-2">
-																<input required type="radio" disabled  id="walletRadio" name="payment" value="wallet" />
-															</div>
-															<label class="d-block text-dark" for="walletRadio">Wallet <span class="text-danger text-sm">(Due to insufficient balance in wallet)</span></label>
-														</div>
-														<%}%>
-												</div>
-											</div>
+											
 										
 											
 										
@@ -342,7 +296,23 @@
 											</div>
 										</div>
 
-										<button type="button" id="placeOrderBtn" class="btn btn-outline-primary-2 btn-order btn-block">
+										<button type="button" id="placeOrderBtn" onclick="PlaceOrder()" class="btn btn-outline-primary-2 btn-order btn-block"
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										
+										>
 											<span class="btn-text">Place Order</span>
 											<span class="btn-hover-text">Proceed to Checkout</span>
 										</button>
@@ -524,7 +494,7 @@ aria-hidden="true">
 			</button>
 		</div>
 		<div class="modal-body">
-			<form id="addAddressForm"  method="post" novalidate>
+			<form action="/addaddress" id="addAddressForm"  method="post" >
 				<div class="form-group">
 					<label for="fullName">Full Name:</label>
 					<input type="text" class="form-control" id="fullName" name="fullName" required>
@@ -557,18 +527,17 @@ aria-hidden="true">
 					<label for="email">Email:</label>
 					<input type="email" class="form-control" id="email" name="email" required>
 				</div>
-			</form>
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			<button type="button" class="btn btn-outline-warning" id="submitAddressBtn">Add Address</button>
+			<button type="submit" class="btn btn-outline-warning" id="submitAddressBtn">
+				Add Address
+			</button>
 		</div>
+	</form>
 	</div>
 </div>
 </div>
-
-
-
 
 
 

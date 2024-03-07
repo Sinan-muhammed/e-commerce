@@ -161,7 +161,7 @@
 
                     <div class="header-right">
                         <div class="dropdown cart-dropdown">
-                            <% if(locals.user){ %>
+                            <% if(locals.email){ %>
                                 <a href="/cart" class="dropdown-toggle">
                                     <div class="icon">
                                         <i class="icon-shopping-cart"></i>
@@ -291,7 +291,7 @@
 
                                 <div class="product-details-action">
                                     <a  class="btn-product btn-cart"
-                                      href="/cart?id=<%= product._id %>"  ><span>add to cart</span></a>
+                                      onclick="addToCart('<%= product._id %>'); " ><span>add to cart</span></a>
 
                                     <div class="details-action-wrapper">
                                         <a href="/wishlist?id=<%= product._id %>" class="btn-product btn-wishlist" title="Wishlist"><span>Add to
@@ -572,6 +572,64 @@
            imageCrossfade: true
        });
    });
+
+
+
+
+
+   function addToCart(productId) {
+    fetch('/addtocart', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId })
+    })
+    .then(response => response.json())
+    .then(response => {
+        console.log('Response from server:', response);
+        
+        if (response.quantity == false) {
+            Swal.fire(
+                'Out of Stock',
+                response.error || 'Product is Out of stock',
+                'warning'
+            );
+        } else if (response.session == false) {
+            Swal.fire({
+                title: 'Login Required',
+                text: response.error || 'You want to login.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Login',
+                cancelButtonText: 'Cancel',
+                
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    console.log('User clicked Login');
+                    window.location.href = '/login';
+                } else {
+                    console.log('User clicked Cancel');
+                }
+            });
+        } else {
+            Swal.fire(
+                'Saved to cart!',
+                'Product added to cart successfully!',
+                'success'
+            );
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire(
+            'Error',
+            'An error occurred while processing your request.',
+            'error'
+        );
+    });
+}
 </script>
 
 
