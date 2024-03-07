@@ -70,6 +70,8 @@ router.post('/editaddresses',addresscontroller.editaddress)
 
 router.post('/placeorder',OrderController.placeorder)
 
+router.post('/verifypayment',OrderController.verifypayment)
+
 router.get('/orderdetails',productController.loadOrderDetails)
 
 router.post('/checkcoupon',Couponcontroller.checkcoupon)

@@ -177,8 +177,8 @@
                                             <td class="product-col">
                                                 <div class="product">
                                                     <figure class="product-media">
-                                                        <a href="/product?id=<%= product.productId._id %>">
-                                                            <img src="/public/assets/images/products/<%=product.productId.images[0]%>"
+                                                        <a href="/product?id=<%= product.productId?._id %>">
+                                                            <img src="/public/assets/images/products/<%=product.productId?.images[0]%>"
                                                                 alt="Product image">
                                                         </a>
                                                     </figure>

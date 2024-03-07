@@ -108,5 +108,27 @@ const instance = new Razorpay({
             console.log(error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
+    },
+
+    verifypayment : async (req,res)=>{
+        try {
+            const userId = req.session.userId;
+            const paymentData = req.body
+            console.log(paymentData,'kitoot');
+            const cartData = await Cart.findOne({user:userId})
+
+            await Order.findByIdAndUpdate(
+                {_id: paymentData.order.receipt},
+                {$set:{ status: 'placed',paymentId : paymentData.payment.razorpay_payment_id}}
+            )
+
+            await Cart.deleteOne({ user : userId})
+            res.json({ placed: true });
+
+        } catch (error) {
+            console.log(error.message);
+        }
     }
-  }    
+  }  
+  
+  
