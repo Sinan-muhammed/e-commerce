@@ -17,7 +17,7 @@ module.exports ={
 
                 const cartData = await Cart.findOne({user:user_id}).populate("product.productId")
                 console.log(cartData,'cartproducts');
-               const subtotal = await cartData?.product?.reduce((acc,val) => acc+val.price,0)
+               const subtotal = await cartData?.product?.reduce((acc,val) => acc+val.totalPrice,0)
                console.log(subtotal,'subtotal');
                res.render('user/cart',{cart:cartData,subtotal})
             }
@@ -113,9 +113,7 @@ module.exports ={
             const productId = req.body.productId
             const count = req.body.count
 
-             console.log(user_id);
-            console.log(productId,'prdctid');
-            console.log(count,'count');
+           
 
             const product = await Product.findOne({_id:productId})
             console.log(product);
@@ -146,8 +144,7 @@ module.exports ={
                 },
                 { new: true } // Return the updated document
             );
-            
-        
+           
 
             if (!cartData) {
                 console.log(125);
@@ -170,12 +167,9 @@ module.exports ={
 
             const UserId = req.session.userId
             const addresses = await Address.findOne({user:UserId})
-            console.log(addresses);
             const cartData = await Cart.findOne({user:UserId}).populate("product.productId").populate('user')
-            console.log(cartData);
 
             if(cartData){
-                console.log(cartData.couponDiscount,'couponDiscount');
                 cartData.couponDiscount!=0 ? await cartData.populate('couponDiscount') : 0
                 const discountPercentage = cartData.couponDiscount !=0 ? cartData.couponDiscount.discountPercentage :0
                 const maxDiscount = cartData.couponDiscount !=0 ? cartData.couponDiscount.maxDiscountAmount : 0
@@ -183,14 +177,11 @@ module.exports ={
                 const percentageDiscount = subtotal - (discountPercentage / 100) * subtotal;
                 const discountAmount =subtotal - percentageDiscount;
                 const discount = subtotal - maxDiscount
-                console.log(discount,subtotal,"discount","subtotal")
 
                 if(discountAmount <= maxDiscount){
 
                     res.render('user/checkout',{cartData,addresses,subtotal,disamo:discountAmount,discount:percentageDiscount})
-                    console.log(250);
                 }else{
-                    console.log(252);
                     res.render('user/checkout',{cartData,addresses,subtotal,disamo:discountAmount,discount})
 
                 }

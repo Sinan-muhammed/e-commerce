@@ -159,7 +159,7 @@ if (phone === '') {
 
   });
 
-  console.log('kjdfhgiudsf');
+ 
 	   
   async function PlaceOrder(){
     console.log('Reachrdd');
@@ -180,7 +180,9 @@ if (phone === '') {
             success: function (response) {
                 console.log(response);
                 if (response.placed == true) {
-                    const id = response.orderId;
+                    console.log(response.order,'response order');
+                    const id = response.order;
+                    console.log(id);
                     window.location.href = `/success`;
                 } else {
                     razorpayPayment(response.order);
@@ -197,10 +199,10 @@ if (phone === '') {
 function razorpayPayment(order) {
     console.log(order,"tihiu");
     var options = {
-        "key": "rzp_test_6nfEH21z7G2Wtu",
+        "key": "rzp_test_NLkzUVIMfwUNEg",
         "amount": order.amount,
         "currency": "INR",
-        "name": "Furni.Ltd",
+        "name": "cartFurnish",
         "description": "Test Transaction",
         "image": "",
         "order_id": order.id,
@@ -208,7 +210,7 @@ function razorpayPayment(order) {
             verifyPayment(response, order);
 			},
 			"prefill": {
-				"name": "Furni Ltd",
+				"name": "cartFurnish",
 				"email": "furniworld@gmail.com",
 				"contact": "9999999999"
 			},
@@ -216,7 +218,7 @@ function razorpayPayment(order) {
 				"address": "India"
 			},
 			"theme": {
-				"color": "#cc9967"
+				"color": "#0000FF"
         }
     };
 
@@ -235,7 +237,7 @@ function verifyPayment(payment, order,) {
         },
         success: (response) => {
             if (response.placed == true) {
-                window.location.href = '/success'
+                window.location.href = `/success`
             } else {
                 swal.fire({
                     positon: "center",

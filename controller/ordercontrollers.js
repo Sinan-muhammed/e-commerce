@@ -24,10 +24,7 @@ const instance = new Razorpay({
       placeorder: async (req, res) => {
         try {
 
-            console.log("place order");
             const total = req.body.totalamount;
-            console.log(total,'total');
-            console.log(req.body);
             const userId = req.session.userId;
             const addressIndex = !req.body.address ? 0 : req.body.address;
             const paymentMethod = req.body.payment;
@@ -89,7 +86,7 @@ const instance = new Razorpay({
                     );
                 }
                 await Cart.deleteOne({ user: userId });
-                res.json({ placed: true });
+                res.json({ placed: true , orderData});
             } else if (paymentMethod === 'onlinePayment') {
                 // Handle online payment
                 // Ensure that 'instance' is properly initialized
@@ -100,8 +97,8 @@ const instance = new Razorpay({
                     receipt: "" + orderData._id
                 };
                 console.log(options);
-                instance.orders.create(options, function (err, order) {
-                    res.json({ order });
+                instance.orders.create(options, function (err, orderData) {
+                    res.json({ orderData });
                 });
             }
         } catch (error) {
@@ -112,6 +109,9 @@ const instance = new Razorpay({
 
     verifypayment : async (req,res)=>{
         try {
+
+            console.log('verify payment');
+            
             const userId = req.session.userId;
             const paymentData = req.body
             console.log(paymentData,'kitoot');

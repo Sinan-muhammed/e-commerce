@@ -1,8 +1,10 @@
 const { truncateSync } = require('fs')
 const Address = require ('../models/addressmodel')
 const User    = require('../models/signupModel')
+const Orders  = require('../models/orderModel')
 const { errorMonitor } = require('events')
 
+const {ObjectId} = require('mongodb')
 
 
 module.exports ={
@@ -90,7 +92,11 @@ module.exports ={
 
     loadSuccess: async (req,res)=>{
         try {
-            res.render('user/success')
+            // const id = req.query.id
+            // console.log(id);
+            // const order = await Orders.find({})
+            // console.log(order);
+            res.render('user/success',{order:''})
         } catch (error) {
             console.log(error);
         }
@@ -98,11 +104,11 @@ module.exports ={
 
     editaddress : async(req,res)=>{
         try {
-            console.log('edit address');
+            
             const userId = req.session.userId
-            console.log(userId);
+           
            const addressId = req.body.addressId
-           console.log(addressId,'addressId');
+           
 
            const updatedAddress = await Address.findOneAndUpdate(
             { user:userId, 'address._id': addressId},
