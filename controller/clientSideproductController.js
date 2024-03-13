@@ -29,11 +29,10 @@ module.exports={
         try {
 
             const locals =await User.findOne({_id:req.session.userId})
-            console.log(locals);
             const productId = req.query.id
-
+            const cart = await Cart.findOne({user:req.session.userId})
             const product = await Product.findOne({_id:productId})
-            res.render('user/product',{product,review:[],locals})
+            res.render('user/product',{product,review:[],locals,cart})
         } catch (error) {
 
             console.log(error);

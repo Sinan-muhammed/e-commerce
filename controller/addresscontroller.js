@@ -30,13 +30,14 @@ module.exports ={
 
             await Address.findOneAndUpdate(
                 {user:userId},
-                { $set : {user:userId}, $push: {address: data}},
-                { upsert : true, new: true}
+                {  $push: {address: data}},
+                
             )
-
-            res.redirect('/success');
+                console.log('fsfsddsdfs');
+            res.redirect('/checkout');
         } catch (error) {
             console.log(error);
+            res.status(500).send("Internal Server Error");
         }
     },
 
@@ -92,8 +93,8 @@ module.exports ={
 
     loadSuccess: async (req,res)=>{
         try {
-            // const id = req.query.id
-            // console.log(id);
+            const id = req.query.id
+            console.log(id);
             // const order = await Orders.find({})
             // console.log(order);
             res.render('user/success',{order:''})

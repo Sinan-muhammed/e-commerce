@@ -73,6 +73,7 @@ router.post('/placeorder',OrderController.placeorder)
 router.post('/verifypayment',OrderController.verifypayment)
 
 router.get('/orderdetails',productController.loadOrderDetails)
+router.post('/cancelproduct',OrderController.cancelProduct)
 
 router.post('/checkcoupon',Couponcontroller.checkcoupon)
 

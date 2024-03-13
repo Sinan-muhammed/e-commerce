@@ -158,7 +158,7 @@
                         <div class="row align-items-center">
                             <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                                 <span> <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2020, 4:34PM</b> </span> <br />
-                                <small class="text-muted">Order ID: </small>
+                                <small class="text-muted">Order ID: <%= order._id %> </small>
                             </div>
                             <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                                 <a class="btn btn-primary" href="#">Save</a>
@@ -176,9 +176,10 @@
                                     <div class="text">
                                         <h6 class="mb-1">Customer</h6>
                                         <p class="mb-1">
-                                            <%= order.deliveryDetails %> <br />
-                                            <%= order.deliveryDetails %> <br />
-                                            <%= order.deliveryDetails %>
+                                            <%= order.deliveryDetails.fullName %> <br />
+                                            <%= order.deliveryDetails.country %> <br />
+                                            <%= order.deliveryDetails.housename %><br />
+                                            <%= order.deliveryDetails.phone %>
                                         </p>
                                     </div>
                                 </article>
@@ -206,8 +207,8 @@
                                     <div class="text">
                                         <h6 class="mb-1">Deliver to</h6>
                                         <p class="mb-1">
-                                            City: <%= order.deliveryDetails %> <br /><%= order.deliveryDetails %><br />
-                                            <%= order.deliveryDetails %>                                        </p>
+                                            City: <%= order.deliveryDetails.city %> <br /><%= order.deliveryDetails.pincode %><br />
+                                            <%= order.deliveryDetails.state %>                                        </p>
                                     </div>
                                 </article>
                             </div>
@@ -227,15 +228,15 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <% order.forEach(product => { %>
+                                            <% order.products.forEach(product => { %>
                                                 <tr>
                                                     <td>
                                                         <a class="itemside" href="#">
                                                             <div class="left">
-                                                                <img src="/public/assets/images/products/sharpened/" width="40" height="40" class="img-xs" alt="Item" />
+                                                                <img src="/public/assets/images/products/<%=product.productId?.images[0]%>" width="40" height="40" class="img-xs" alt="Item" />
                                                             </div>
                                                             <div class="info">
-                                                                <!-- <%= product.productId.name %> -->
+                                                                <%= product.name %>
                                                             </div>
                                                         </a>
                                                     </td>

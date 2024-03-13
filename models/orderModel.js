@@ -10,7 +10,7 @@ const orderSchema = new mongoose.Schema({
     },
     deliveryDetails:{
         type:Object,
-        required:true
+        required:true   
     },
     products:[{
         productId:{

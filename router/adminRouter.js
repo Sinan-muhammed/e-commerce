@@ -59,7 +59,7 @@ router.post('/editbanner',uploadBanner.single('image12'),bannerControllers.editb
 router.delete('/deletebanner/:id',bannerControllers.deletebanner)
 
 router.get('/order',adminCantrollers.orderGet)
-// router.get('/orders/showorders',showorderGET)
+router.get('/showorder',adminCantrollers.showOrder)
 
 // router.get('/logout',adminCantrollers.adminLogout)
 

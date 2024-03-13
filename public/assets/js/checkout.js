@@ -43,42 +43,44 @@
 
 
 //add address
-$(document).ready(function () {
-    $('#submitAddressBtn').on('click', function () {
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('submitAddressBtn').addEventListener('click', function () {
         if (validateForm()) {
-            var formData = $('#addAddressForm').serialize();
+            var formData = new FormData(document.getElementById('addAddressForm'));
             console.log(formData);
 
-            $.ajax({
-                type: 'POST',
-                url: '/addaddresses',
-                data: formData,
-                success: function (response) {
-                    console.log(response);
-                    if (response.add == true) {
-                        // $('#addrassArea').load('/account #addrassArea');
-                        window.location.reload();
-                        $('#addAddressModal').modal('hide');
-                        $('.modal-backdrop').remove();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Address Added Successfully',
-                            text: 'Your address has been added successfully.',
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'There was a problem adding your address!',
-                        });
-                    }
-                },
-                error: function (error) {
-                    console.error('Error:', error);
+            fetch('/addaddress', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.add === true) {
+                    // $('#addrassArea').load('/account #addrassArea');
+                    window.location.reload();
+                    document.getElementById('addAddressModal').modal('hide');
+                    document.querySelector('.modal-backdrop').remove();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Address Added Successfully',
+                        text: 'Your address has been added successfully.',
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'There was a problem adding your address!',
+                    });
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
         }
     });
+});
+
 
 	function validateForm() {
     var fullName = $('#fullName').val().trim();
@@ -157,43 +159,48 @@ if (phone === '') {
 }
 
 
-  });
+  
 
  
 	   
-  async function PlaceOrder(){
-    console.log('Reachrdd');
-        var subtotalElement = document.getElementById("subtotal");
-        var subtotal = parseFloat(subtotalElement.innerText.replace('₹',''));
-        var totalamountElement = document.getElementById('totalamount');
-        var totalamount = parseFloat(totalamountElement.innerText.replace('₹', ''));
-        var formData = $("#orderForm").serialize();
+async function PlaceOrder() {
+    console.log('Reached');
+    var subtotalElement = document.getElementById("subtotal");
+    var subtotal = parseFloat(subtotalElement.innerText.replace('₹', ''));
+    var totalamountElement = document.getElementById('totalamount');
+    var totalamount = parseFloat(totalamountElement.innerText.replace('₹', ''));
+    var formData = $("#orderForm").serialize();
 
-        formData += '&totalamount=' + encodeURIComponent(totalamount);
-        formData += '&subtotal=' + encodeURIComponent(subtotal);
-        
-        console.log(formData, "is getting", totalamount,typeof(totalamount));
-        $.ajax({
-            type: "POST",
-            url: "/placeorder",
-            data: formData,
-            success: function (response) {
-                console.log(response);
-                if (response.placed == true) {
-                    console.log(response.order,'response order');
-                    const id = response.order;
-                    console.log(id);
-                    window.location.href = `/success`;
-                } else {
-                    razorpayPayment(response.order);
-                }
+    formData += '&totalamount=' + encodeURIComponent(totalamount);
+    formData += '&subtotal=' + encodeURIComponent(subtotal);
+
+    console.log(formData, "is getting", totalamount, typeof (totalamount));
+
+    try {
+        const response = await fetch("/placeorder", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
             },
-            error: function (error) {
-                console.error('Error:', error);
-                alert("An error occurred while processing the order.");
-            }
+            body: formData
         });
+        const responseData = await response.json();
+
+        console.log(responseData);
+        if (responseData.placed === true) {
+            console.log(responseData.order, 'response order');
+            const id = responseData.orderid;
+            console.log(id, 'fetch id');
+            window.location.href = "/success";
+        } else {
+            razorpayPayment(responseData.order);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert("An error occurred while processing the order.");
     }
+}
+
 
 
 function razorpayPayment(order) {

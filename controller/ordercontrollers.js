@@ -6,6 +6,7 @@ const User    = require('../models/signupModel')
 const  Razorpay = require('razorpay')
 const crypto  = require('crypto')
 const { log } = require('console')
+const productcontroller = require('./productcontroller')
 
 
 const instance = new Razorpay({
@@ -55,6 +56,7 @@ const instance = new Razorpay({
     
             const addressData = await Address.findOne({ user: userId });
             const address = addressData.address[addressIndex];
+            console.log(address,'address in checkout');
             const cartData = await Cart.findOne({ user: userId });
             const totalAmount = cartData.product.reduce((acc, val) => acc + val.quantity * val.price, 0);
     
@@ -86,7 +88,7 @@ const instance = new Razorpay({
                     );
                 }
                 await Cart.deleteOne({ user: userId });
-                res.json({ placed: true , orderData});
+                res.json({ placed: true });
             } else if (paymentMethod === 'onlinePayment') {
                 // Handle online payment
                 // Ensure that 'instance' is properly initialized
@@ -128,7 +130,29 @@ const instance = new Razorpay({
         } catch (error) {
             console.log(error.message);
         }
-    }
+    },
+     
+      cancelProduct : async (req,res)=>{
+        try {
+            const user = req.session.userId
+            const productId = req.body.productId
+            console.log(productId);
+            const orderData = await Order.findOneAndUpdate(
+                {'products._id':productId},
+                {$set : {'products.$.productstatus':'cancel'}}
+            )
+            for(const orderProduct of orderData.products){
+                const product = orderProduct.productId
+                const quantity = orderProduct.quantity
+
+                await Product.updateOne({_id:product},{$inc:{quantity:quantity}})
+            }
+            res.json({cancel : true})
+            console.log(productId,'productId');
+        } catch (error) {
+            console.log(error);
+        }
+      }
   }  
   
   

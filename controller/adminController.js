@@ -3,6 +3,7 @@ const userData=require("../models/signupModel")
 const bcrypt = require('bcrypt')
 const Category = require('../models/categorymodal')
 const product = require('../models/productmodel')
+const Order    = require('../models/orderModel')
 const { name } = require('ejs')
 
 
@@ -20,7 +21,7 @@ module.exports={
         const ordercount=[]
         const productcount=[]
         const monthlyRevenueNumber=[]
-        const order=[]
+        const order= await Order.find().populate('userId')
         const categorycount=[]
 
         res.render('admin/dashboard',{totalRevenueNumber,order,ordercount,productcount,monthlyRevenueNumber,categorycount})
@@ -51,8 +52,18 @@ module.exports={
   
     orderGet: async (req,res)=>{
         try {
-            const order=[]
+            const order=await Order.find().populate('userId')
             res.render('admin/order',{order})
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    showOrder : async (req,res)=>{
+        try {
+            const order = await Order.findOne({_id:req.query.id}).populate('products.productId')
+            console.log(order);
+            res.render('admin/showorder',{order})
         } catch (error) {
             console.log(error);
         }
