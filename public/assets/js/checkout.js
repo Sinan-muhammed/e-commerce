@@ -188,7 +188,7 @@ async function PlaceOrder() {
 
         console.log(responseData);
         if (responseData.placed === true) {
-            console.log(responseData.order, 'response order');
+            
             const id = responseData.orderid;
             console.log(id, 'fetch id');
             window.location.href = "/success";

@@ -2,7 +2,7 @@ const express=require('express')
 const userData=require("../models/signupModel")
 const bcrypt = require('bcrypt')
 const Category = require('../models/categorymodal')
-const product = require('../models/productmodel')
+const Product = require('../models/productmodel')
 const Order    = require('../models/orderModel')
 const { name } = require('ejs')
 
@@ -18,11 +18,11 @@ module.exports={
 
     adminDashboardGET: async (req,res)=>{
         const totalRevenueNumber=[]
-        const ordercount=[]
-        const productcount=[]
+        const ordercount= await Order.find({}).countDocuments()
+        const productcount= await Product.find({}).countDocuments()
         const monthlyRevenueNumber=[]
         const order= await Order.find().populate('userId')
-        const categorycount=[]
+        const categorycount= await Category.find({}).countDocuments()
 
         res.render('admin/dashboard',{totalRevenueNumber,order,ordercount,productcount,monthlyRevenueNumber,categorycount})
     },
