@@ -4,19 +4,68 @@ const bcrypt = require('bcrypt')
 const Category = require('../models/categorymodal')
 const Product = require('../models/productmodel')
 const Order    = require('../models/orderModel')
+const adminData = require('../models/adminDatamodel')
 const { name } = require('ejs')
-
 
 
 
 module.exports={
 
+    signupGet:async (req,res)=>{
+        res.render('admin/signup')
+    },
+    signupPost:async (req,res)=>{
+          try {
+            console.log(req.body);
+            const {email,password,name,mobile} = req.body
+
+            const adminDetails = await adminData.create({
+                name:name,
+                email:email,
+                mobile:mobile,
+                password:password
+            })
+                console.log('details saved');
+
+                res.redirect(`/admin/ad-login?email=${email}`)
+
+          } catch (error) {
+            console.log(error);
+          }
+    },
     adminLoginGET: async (req,res)=>{
-        const message = []
-          res.render('admin/admin-login',{message})
+        try {
+            const email= req.query.email
+            const message = []
+              res.render('admin/admin-login',{message,email})
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    adminLoginPost: async (req,res)=>{
+            try {
+                const queryemail = await req.query.email
+                console.log(queryemail);
+
+                const {email,password} = req.body
+
+                const admin = await adminData.findOne({email:email})
+                console.log(admin);
+
+                req.session.adminId = admin.id
+                console.log(req.session.adminId);
+
+                if(admin){
+                    res.redirect(`/admin/dashboard`)
+                }
+                
+            } catch (error) {
+                console.log(error);
+            }
     },
 
     adminDashboardGET: async (req,res)=>{
+        
         const totalRevenueNumber=[]
         const ordercount= await Order.find({}).countDocuments()
         const productcount= await Product.find({}).countDocuments()
@@ -38,13 +87,32 @@ module.exports={
         }
     },
 
+    bolckeUser : async (req,res)=>{
+      try {
+        const user = req.params.id
+        console.log(user);
+        const userValue = await userData.findOne({_id:user})
+        if(userValue.is_blocked ){
+            await userData.updateOne({_id:user},{$set:{is_blocked:false}})
+            console.log(userValue.is_blocked,'if ');
+        }else{
+            await userData.updateOne({_id:user},{$set:{is_blocked:true}})
+            console.log(userValue.is_blocked,'else');
+            req.session.user_id = null;
+        }
+        res.json({ block: true });
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
+
     reportGET:(req,res)=>{
         const {startDate,endDate}= new Date
         const order=[]
         const product=[]      
         
         try {
-            res.render('report',{startDate,endDate,order,product})
+            res.render('admin/report',{startDate,endDate,order,product})
         } catch (error) {
             console.log(error);
         }

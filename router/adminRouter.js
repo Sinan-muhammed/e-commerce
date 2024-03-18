@@ -9,14 +9,16 @@ const {upload,uploadBanner} = require('../middlewares/multer')
 
 
 
+router.get('/ad-signup',adminCantrollers.signupGet)
+router.post('/ad-signup',adminCantrollers.signupPost)
 
-router.get('/',adminCantrollers.adminLoginGET)
-// router.post('/',adminRouter)
+router.get('/ad-login',adminCantrollers.adminLoginGET)
+router.post('/ad-login',adminCantrollers.adminLoginPost)
 
 router.get('/dashboard',adminCantrollers.adminDashboardGET)
 
 router.get('/users',adminCantrollers.usersGET)
-// // router.delete('/userList/deleteUser',adminRouter)
+router.patch('/blockusers/:id',adminCantrollers.bolckeUser)
 
 // router.get('/report',reportGET)
 

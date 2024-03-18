@@ -88,9 +88,7 @@ module.exports = {
   },
   
   signupPOST: async (req, res) => {
-    console.log("1");
-    console.log(req.body);
-
+  
     const { email, password, name, mobile } = req.body;
 
     async function signupData() {
@@ -103,13 +101,10 @@ module.exports = {
       });
     }
 
-    console.log("2");
+
 
     signupData();
-    console.log("3");
-
-    console.log("otp senting success");
-
+    
     try {
       client.verify.v2
         .services(verifySid)

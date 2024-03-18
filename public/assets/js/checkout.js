@@ -162,44 +162,34 @@ if (phone === '') {
   
 
  
-	   
-async function PlaceOrder() {
-    console.log('Reached');
-    var subtotalElement = document.getElementById("subtotal");
-    var subtotal = parseFloat(subtotalElement.innerText.replace('₹', ''));
-    var totalamountElement = document.getElementById('totalamount');
-    var totalamount = parseFloat(totalamountElement.innerText.replace('₹', ''));
-    var formData = $("#orderForm").serialize();
+$(document).ready(function () {
+    $("#placeOrderBtn").on("click", function (event) {
+        var formData = $("#orderForm").serialize();
+        event.preventDefault();
 
-    formData += '&totalamount=' + encodeURIComponent(totalamount);
-    formData += '&subtotal=' + encodeURIComponent(subtotal);
-
-    console.log(formData, "is getting", totalamount, typeof (totalamount));
-
-    try {
-        const response = await fetch("/placeorder", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+        console.log(formData,"is getting")
+        $.ajax({
+            type: "POST",
+            url: "/placeorder",
+            data: formData,
+            success: function (response) {
+                console.log(response);
+                if (response.placed == true) {
+                    window.location.href = '/success';
+                }else if(response.wallet == false){
+                        swal.fire("Oops, it looks like your wallet balance is too low to place this order !!", "", "error")
+                    }
+				 else {
+                    razorpayPayment(response.order);
+                }
             },
-            body: formData
+            error: function (error) {
+                console.error('Error:', error);
+                alert("An error occurred while processing the order.");
+            }
         });
-        const responseData = await response.json();
-
-        console.log(responseData);
-        if (responseData.placed === true) {
-            
-            const id = responseData.orderid;
-            console.log(id, 'fetch id');
-            window.location.href = "/success";
-        } else {
-            razorpayPayment(responseData.order);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert("An error occurred while processing the order.");
-    }
-}
+    });
+});
 
 
 
@@ -233,30 +223,49 @@ function razorpayPayment(order) {
     rzp1.open();
 }
 
-function verifyPayment(payment, order,) {
-
-    $.ajax({
-        url: "/verifypayment",
-        method: "post",
-        data: {
-            payment: payment,
-            order: order,
-        },
-        success: (response) => {
-            if (response.placed == true) {
-                window.location.href = `/success`
-            } else {
-                swal.fire({
-                    positon: "center",
-                    icon: "error",
-                    title: "Payment failed",
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-            }
-        },
-    });
-}
+function verifyPayment(payment, order) {
+    fetch("/verifypayment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        payment: payment,
+        order: order,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Network response was not ok");
+        }
+      })
+      .then((data) => {
+        if (data.placed === true) {
+          window.location.href = `/success`;
+        } else {
+          swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Payment failed",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Payment failed",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+  }
+  
 
 
 function applyCoupon() {

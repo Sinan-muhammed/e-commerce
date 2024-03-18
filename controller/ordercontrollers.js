@@ -94,13 +94,13 @@ const instance = new Razorpay({
                 // Ensure that 'instance' is properly initialized
                 // and that 'instance.orders.create' is a valid function call
                 const options = {
-                    amount: totalAmount * 100,
+                    amount: totalAmount ,
                     currency: 'INR',
                     receipt: "" + orderData._id
                 };
                 console.log(options);
-                instance.orders.create(options, function (err, orderData) {
-                    res.json({ orderData });
+                instance.orders.create(options, function (err, order) {
+                    res.json({ order });
                 });
             }
         } catch (error) {
