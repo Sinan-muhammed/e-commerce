@@ -152,6 +152,26 @@ const instance = new Razorpay({
         } catch (error) {
             console.log(error);
         }
+      },
+      returnProduct : async (req,res)=>{
+        try {
+            const userId = req.session.userId
+            const productId = req.body.productId
+            const orderData = await Order.findOneAndUpdate(
+                {'products._id':productId},
+                {$set:{'products.$.productstatus':'Return'}}
+            )
+            for(const orderProduct of orderData.products){
+                const product = orderProduct.productId
+                const quantity = orderProduct.quantity
+
+                await Product.updateOne({_id:product},{$inc:{quantity:quantity}})
+            }
+           res.json({cancel:true})
+           console.log(productId, "product Id")
+        } catch (error) {
+            console.log(error);
+        }
       }
   }  
   

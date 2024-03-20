@@ -1,7 +1,7 @@
 const User = require('../models/signupModel')
 const path = require('path')
 const ejs   = require('ejs')
-const  puppeteer = require('pupeteer')
+const  puppeteer = require('puppeteer')
 const browser    = require('browser')
 const Product = require('../models/productmodel')
 const Category = require('../models/categorymodal')
@@ -10,6 +10,7 @@ const Coupon = require('../models/couponmodel')
 const Cart   = require('../models/cartModel')
 const Adress  = require('../models/addressmodel')
 const Order  = require('../models/orderModel')
+const reviewModel = require('../models/reviewModel')
 const { log } = require('util')
 const { ObjectId } = require('mongodb')
 
@@ -33,10 +34,17 @@ module.exports={
         try {
 
             const locals =await User.findOne({_id:req.session.userId})
-            const productId = req.query.id
+            const productId = new ObjectId(req.query.id)
+            
             const cart = await Cart.findOne({user:req.session.userId})
             const product = await Product.findOne({_id:productId})
-            res.render('user/product',{product,review:[],locals,cart})
+
+           const review = await reviewModel.aggregate([
+                { $match: { productId: productId } }
+            ]);
+
+            console.log(review,'review');
+            res.render('user/product',{product,review,locals,cart})
         } catch (error) {
 
             console.log(error);

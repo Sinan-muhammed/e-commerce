@@ -10,6 +10,8 @@ const addresscontroller = require("../controller/addresscontroller");
 const wishlistController = require('../controller/wishlistCantroller')
 const Couponcontroller  = require('../controller/couponController')
 const OrderController   = require('../controller/ordercontrollers')
+const ReviewController    = require('../controller/reviewController');
+const reviewController = require("../controller/reviewController");
 
 // Configure session middleware
 router.use(
@@ -74,6 +76,7 @@ router.post('/verifypayment',OrderController.verifypayment)
 
 router.get('/orderdetails',productController.loadOrderDetails)
 router.post('/cancelproduct',OrderController.cancelProduct)
+router.post('/returnproduct',OrderController.returnProduct)
 
 router.post('/checkcoupon',Couponcontroller.checkcoupon)
 
@@ -82,6 +85,8 @@ router.get('/faq',userController.loadfaq)
 router.get('/contact',userController.loadcontact)
 
 router.get('/invoice',productController.loadInvoice)
+router.post('/submit-review',reviewController.addreview)
+router.post('/vote',reviewController.voting)
 // router.get('/logout',userRouter)
 
 module.exports = router;
