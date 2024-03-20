@@ -93,11 +93,9 @@ module.exports ={
 
     loadSuccess: async (req,res)=>{
         try {
-            const id = req.query.id
+            const id = req.query.order
             console.log(id);
-            // const order = await Orders.find({})
-            // console.log(order);
-            res.render('user/success',{order:''})
+            res.render('user/success',{id})
         } catch (error) {
             console.log(error);
         }

@@ -84,17 +84,17 @@ const instance = new Razorpay({
                 for (const item of orderItems) {
                     await Product.updateOne(
                         { _id: item.productId },
-                        { $inc: { quantity: -item.quantity } }
+                        { $inc: { quantity: - item.quantity } }
                     );
                 }
                 await Cart.deleteOne({ user: userId });
-                res.json({ placed: true });
+                res.json({ placed: true, order});
             } else if (paymentMethod === 'onlinePayment') {
                 // Handle online payment
                 // Ensure that 'instance' is properly initialized
                 // and that 'instance.orders.create' is a valid function call
                 const options = {
-                    amount: totalAmount ,
+                    amount: totalAmount * 100 ,
                     currency: 'INR',
                     receipt: "" + orderData._id
                 };

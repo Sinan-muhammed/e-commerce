@@ -108,7 +108,7 @@ module.exports={
 
     reportGET:(req,res)=>{
         const {startDate,endDate}= new Date
-        const order=[]
+        const order= []
         const product=[]      
         
         try {
@@ -130,9 +130,32 @@ module.exports={
     showOrder : async (req,res)=>{
         try {
             const order = await Order.findOne({_id:req.query.id}).populate('products.productId')
-            console.log(order);
             res.render('admin/showorder',{order})
         } catch (error) {
+            console.log(error);
+        }
+    },
+    updatestatus : async(req,res)=>{
+        try {
+            console.log(1255);
+            const productId = req.body.productId
+            const productStatus = req.body.newStatus
+            const updatedOrder = await Order.findOneAndUpdate(
+                {
+                    'products._id':productId
+                },
+                {
+                    $set:{
+                        'products.$.productstatus':productStatus
+                    }
+                },
+                {new:true}
+            )
+
+            res.json({success:true})
+
+        } catch (error) {
+            res.status(500).json({message:"Internal server error"})
             console.log(error);
         }
     }

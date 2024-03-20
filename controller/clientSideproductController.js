@@ -1,5 +1,8 @@
 const User = require('../models/signupModel')
-const path =require('path')
+const path = require('path')
+const ejs   = require('ejs')
+const  puppeteer = require('pupeteer')
+const browser    = require('browser')
 const Product = require('../models/productmodel')
 const Category = require('../models/categorymodal')
 const Banner = require('../models/bannermodel')
@@ -8,6 +11,7 @@ const Cart   = require('../models/cartModel')
 const Adress  = require('../models/addressmodel')
 const Order  = require('../models/orderModel')
 const { log } = require('util')
+const { ObjectId } = require('mongodb')
 
 
 
@@ -60,9 +64,9 @@ module.exports={
     loadOrderDetails: async (req,res)=>{
         try {
             
-            const userId = req.session.userId
-            const id = req.query.id
-            console.log(id,'order id');
+            const userId = new ObjectId (req.session.userId)
+            console.log(userId,'user id');
+            const id = new ObjectId (req.query.id,'order id')
             const orderData = await Order.findOne({_id:id}).populate('products.productId')
             console.log(orderData);
             res.render('user/orderdetails',{order:orderData})
@@ -71,11 +75,47 @@ module.exports={
         }
     },
 
+    
+   
     loadInvoice: async (req,res)=>{
         try {
-            res.render('user/invoice',{productsData:[],orderData:[],product:[]})
+            const productId = req.query.productId
+            const orderId = req.query.orderId
+            console.log(orderId,1,productId);
+            const orderData = await Order.findOne({_id:orderId}).populate('userId')
+            const productsData = await Promise.all(
+                orderData.products.map(async(product)=>{
+                    const productDetails = await Product.findOne({_id:productId})
+                    return{
+                        ...product.toObject(),
+                        productDetails
+                    }
+                })
+            )
+            console.log(productsData,'details');
+
+            const projectRoot = path.join(__dirname,'..')
+
+            const invoiceTemplatePath = path.join(projectRoot,'views',"user",'invoice.ejs')
+            const htmlContent    = await ejs.renderFile(invoiceTemplatePath,{productsData,orderData})
+
+            const browser = await puppeteer.launch()
+            const page = await browser.newPage()
+
+            await page.setContent(htmlContent)
+
+            // Genarate Pdf 
+            const pdfBuffer = await page.pdf()
+
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=invoice.pdf`);
+            res.send(pdfBuffer);
+
+            await browser.close();
+
         } catch (error) {
-            console.log(error);
+            console.error('Error generating invoice:', error.message);
+            res.status(500).send('Internal Server Error');
         }
     },
 

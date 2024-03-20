@@ -304,30 +304,47 @@
 
 
             <script>
-    function changeProductStatus(productId,id) {
-    const newStatus = $('#orderstatus').val();
-    console.log(newStatus, productId,id);
-    $.ajax({
-        url: '/admin/updateProductStatus',
-        method: 'POST',
-        data: { productId, newStatus },
-        success: function (response) {
+    function changeProductStatus(productId, id) {
+    const newStatus = document.getElementById('orderstatus').value;
+    console.log(newStatus, productId, id);
 
-            if (response.success) {
-                $('#reload').load(`/admin/showorder?id=${id} #reload`);
-            } else {
-                swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: "Somthing happened",
-                });
-            }
+    fetch('/admin/updateProductStatus', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
         },
-        error: function (error) {
-            console.error('Error updating product status:', error);
+        body: JSON.stringify({ productId, newStatus })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            document.getElementById('reload').innerHTML = '';
+            fetch(`/admin/showorder?id=${id}`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('reload').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error loading order:', error);
+            });
+        } else {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something happened',
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error updating product status:', error);
     });
 }
+
 
             </script>
             <!-- content-main end// -->

@@ -166,19 +166,14 @@ $(document).ready(function () {
     $("#placeOrderBtn").on("click", function (event) {
         var formData = $("#orderForm").serialize();
         event.preventDefault();
-
-        console.log(formData,"is getting")
         $.ajax({
             type: "POST",
             url: "/placeorder",
             data: formData,
-            success: function (response) {
-                console.log(response);
-                if (response.placed == true) {
-                    window.location.href = '/success';
-                }else if(response.wallet == false){
-                        swal.fire("Oops, it looks like your wallet balance is too low to place this order !!", "", "error")
-                    }
+            success: function (response,order) {
+               if (response.placed == true) {
+                    window.location.href = `/success?order=${response.order._id}`;
+                }
 				 else {
                     razorpayPayment(response.order);
                 }
@@ -194,7 +189,6 @@ $(document).ready(function () {
 
 
 function razorpayPayment(order) {
-    console.log(order,"tihiu");
     var options = {
         "key": "rzp_test_NLkzUVIMfwUNEg",
         "amount": order.amount,

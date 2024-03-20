@@ -59,7 +59,7 @@ router.post('/removewishlist',wishlistController.removewishlist)
 router.get('/account',productController.loadAccount)
 // router.post('/account/profile',userRouter)
 
-router.get('/success',addresscontroller.loadSuccess)
+router.get('/success/',addresscontroller.loadSuccess)
 // router.get('/account/orders',userRouter)
 
 router.get('/checkout',cartcantroller.loadCheckout)

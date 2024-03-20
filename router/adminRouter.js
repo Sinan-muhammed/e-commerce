@@ -62,6 +62,7 @@ router.delete('/deletebanner/:id',bannerControllers.deletebanner)
 
 router.get('/order',adminCantrollers.orderGet)
 router.get('/showorder',adminCantrollers.showOrder)
+router.post('/updateProductStatus',adminCantrollers.updatestatus)
 
 // router.get('/logout',adminCantrollers.adminLogout)
 
