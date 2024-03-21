@@ -21,12 +21,25 @@ const storage = multer.diskStorage({
       cb(null, file.fieldname + '-' + uniqueSuffix)
     }
   })    
+
+  const BrandedBanner = multer.diskStorage({
+
+    destination :  function(req,file,cb){
+      cb(null,'./public/assets/images/Branded')
+    },
+    filename:(req,file,cb)=>{
+      const uniqueSuffix =  Math.round(Math.random() * 1E9)
+      cb(null, uniqueSuffix + '-' +  file.fieldname  )
+    }
+  })
   
   const upload = multer({ storage: storage })
 
   const uploadBanner =multer({storage:BannerStorege})
+  const uploadBranded = multer({storage:BrandedBanner})
 
   module.exports = {  
              upload,
-             uploadBanner
+             uploadBanner,
+             uploadBranded
   }

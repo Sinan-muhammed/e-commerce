@@ -5,7 +5,8 @@ const categoryCantrollers = require("../controller/categoryController")
 const productCantrollers = require("../controller/productcontroller")
 const bannerControllers = require('../controller/bannerContrller')
 const couponControllers = require('../controller/couponController')
-const {upload,uploadBanner} = require('../middlewares/multer')
+const {upload,uploadBanner,uploadBranded} = require('../middlewares/multer')
+const brandedBannerController = require('../controller/brandedBannerController')
 
 
 
@@ -59,6 +60,13 @@ router.post('/addbanner',uploadBanner.single('bannerImg'),bannerControllers.addb
 router.get('/editbanner',bannerControllers.editbannerGet)
 router.post('/editbanner',uploadBanner.single('image12'),bannerControllers.editbannerPost)
 router.delete('/deletebanner/:id',bannerControllers.deletebanner)
+
+router.get('/branded',brandedBannerController.loadBrandedBanner)
+router.get('/addBrandedbanner',brandedBannerController.addBrandedGet)
+router.post('/addBrandedbanner',uploadBranded.single('bannerImg'),brandedBannerController.addBrandedPost)
+router.delete('/deletebrand/:id',brandedBannerController.deleteBranded)
+router.get('/editbrand',brandedBannerController.editBrand)
+router.post('/editbrand',uploadBranded.single('image12'),brandedBannerController.editBrandpost)
 
 router.get('/order',adminCantrollers.orderGet)
 router.get('/showorder',adminCantrollers.showOrder)

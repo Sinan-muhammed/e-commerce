@@ -11,11 +11,15 @@
         <meta property="og:url" content="" />
         <meta property="og:image" content="" />
         <!-- Favicon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
         <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/favicon.svg" />
         <!-- Template CSS -->
         <link href="/public/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
     </head>
 
+      
     <body>
         <div class="screen-overlay"></div>
         <aside class="navbar-aside" id="offcanvas_aside">
@@ -45,7 +49,7 @@
                     
                     
      
-                    <li class="menu-item active">
+                    <li class="menu-item ">
                         <a class="menu-link" href="product">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
@@ -53,7 +57,7 @@
                     </li>
 
                     <li class="menu-item ">
-                        <a class="menu-link" href="category">
+                        <a class="menu-link " href="category">
                             <i class="icon material-icons md-category"></i>
                             <span class="text">Categories</span>
                         </a>
@@ -73,13 +77,13 @@
                         </a>
                     </li>
 
-                    <li class="menu-item">
-                        <a class="menu-link" href="banner">
+                    <li class="menu-item active">
+                        <a class="menu-link " href="banner">
                             <i class="icon material-icons md-photo"></i>
                             <span class="text">Banner</span>
                         </a>
                     </li>
-                     
+                    
                     <li class="menu-item">
                         <a class="menu-link" href="branded">
                             <i class="icon material-icons md-photo"></i>
@@ -158,73 +162,51 @@
                     <div class="row">
                         <div class="col-12 col-md-9">
                             <div class="content-header">
-                                <h2 class="content-title">Edit Product</h2>
+                                <h2 class="content-title">Add New Banner</h2>
                             </div>
                         </div>
                         <div class="col-12 col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="/admin/editProduct?id=<%= product._id %>" method="post" enctype="multipart/form-data">
+                                    <form action="/admin/addBrandedbanner" method="post" enctype="multipart/form-data">
                                         <div class="form-group">
-                                            <label for="product_title">Product Name</label>
-                                            <input type="text" class="form-control" id="product_title" name="name" value="<%=product.name%>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="quantity">Quantity</label>
-                                            <input type="number" class="form-control" id="quantity" name="quantity" value="<%=product.quantity%>">
+                                            <label for="title">Banner Title</label>
+                                            <input type="text" class="form-control" id="title" name="title" placeholder="Enter banner title" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Category</label>
-                                            <select class="form-control" id="product-category" name="category">
-                                                         <option value="<%= product.category.name %>"><%=product.category.name %></option>
-                                                <% for (let i = 0; i < category.length; i++) { %>
-                                                        <option value="<%= category[i].name %>"><%= category[i].name %></option>
-                                                <% } %>
-                                            </select>
-
-
-                                            
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Price</label>
-                                            <input type="text" class="form-control" name="price" value="<%=product.price%>">
+                                            <label for="description">Banner Description</label>
+                                            <input type="text" class="form-control" id="description" name="description" placeholder="Enter banner description" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="offer">Offer</label>
-                                            <input type="text" class="form-control" value="<%=product.offer%>" id="offer" name="offer" >
+                                            <label for="image">Upload Banner Image</label>
+                                            <input type="file" class="form-control" id="image" name="bannerImg"  required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Description</label>
-                                            <input type="text" class="form-control" value="<%=product.description%>" name="description" required>   
+                                            <label for="targeturl">Target URL</label>
+                                            <input type="text" class="form-control" id="targeturl" name="targeturl" placeholder="Enter target URL" required>
                                         </div>
-                                        <div class="row d-flex justify-content-center ">
-                                            <div class="row d-flex justify-content-between ">
-                                                <div class="col-lg-3 col-md-6 rounded-image-preview">
-                                                    <label for="imageInput1" class="image-label">Image 1
-                                                        <div class="rounded-image-preview">
-                                                            <img id="imagePreview1" src="/public/assets/images/products/sharpened/<%= product.images %>" alt="Preview" />
-                                                        </div>
-                                                        <input name="image1" type="file" accept="image/*" id="imageInput1" class="imageInput">
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                        </div>
+                                
                                         <div class="form-group mt-3">
                                             <button type="submit" class="btn btn-primary">Submit</button>
-                                            <a href="product" class="btn btn-primary">
+                                            <a href="/admin/branded" class="btn btn-primary">
                                                 <span class="text">Back</span>
                                             </a>
                                         </div>
                                     </form>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
             
+
+
+
+            
+
+
      <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">
@@ -239,6 +221,15 @@
                 </div>
             </footer>
         </main>
+
+
+
+
+
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
         <script src="/public/assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="/public/assets/js/vendors/bootstrap.bundle.min.js"></script>
         <script src="/public/assets/js/vendors/select2.min.js"></script>

@@ -1,7 +1,5 @@
 const express = require("express")
 const Banner = require("../models/bannermodel")
-const Branded = require('../models/brandedModel')
-
 
 
 
@@ -98,7 +96,6 @@ module.exports = {
 
         }
     },
-   
 
 }
 

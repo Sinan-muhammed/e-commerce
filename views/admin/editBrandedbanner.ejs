@@ -11,11 +11,15 @@
         <meta property="og:url" content="" />
         <meta property="og:image" content="" />
         <!-- Favicon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
         <link rel="shortcut icon" type="image/x-icon" href="/public/assets/imgs/theme/favicon.svg" />
         <!-- Template CSS -->
         <link href="/public/assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
     </head>
 
+      
     <body>
         <div class="screen-overlay"></div>
         <aside class="navbar-aside" id="offcanvas_aside">
@@ -45,7 +49,7 @@
                     
                     
      
-                    <li class="menu-item active">
+                    <li class="menu-item ">
                         <a class="menu-link" href="product">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
@@ -53,7 +57,7 @@
                     </li>
 
                     <li class="menu-item ">
-                        <a class="menu-link" href="category">
+                        <a class="menu-link " href="category">
                             <i class="icon material-icons md-category"></i>
                             <span class="text">Categories</span>
                         </a>
@@ -73,22 +77,22 @@
                         </a>
                     </li>
 
-                    <li class="menu-item">
-                        <a class="menu-link" href="banner">
+                    <li class="menu-item active">
+                        <a class="menu-link " href="banner">
                             <i class="icon material-icons md-photo"></i>
                             <span class="text">Banner</span>
                         </a>
                     </li>
-                     
+                    
                     <li class="menu-item">
                         <a class="menu-link" href="branded">
                             <i class="icon material-icons md-photo"></i>
                             <span class="text">Branded Banner</span>
                         </a>
                     </li>
-
+ 
                     <li class="menu-item mt-auto">
-                        <a class="menu-link" href="logout">
+                        <a class="menu-link" href="admin">
                             <i class="icon material-icons md-exit_to_app"></i>
                             <span class="text">Logout</span>
                         </a>
@@ -158,73 +162,143 @@
                     <div class="row">
                         <div class="col-12 col-md-9">
                             <div class="content-header">
-                                <h2 class="content-title">Edit Product</h2>
+                                <h2 class="content-title">Add New Product</h2>
                             </div>
                         </div>
                         <div class="col-12 col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="/admin/editProduct?id=<%= product._id %>" method="post" enctype="multipart/form-data">
+                                    <form action="/admin/editbanner?id=<%= data._id %>" method="post" enctype="multipart/form-data">
                                         <div class="form-group">
-                                            <label for="product_title">Product Name</label>
-                                            <input type="text" class="form-control" id="product_title" name="name" value="<%=product.name%>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="quantity">Quantity</label>
-                                            <input type="number" class="form-control" id="quantity" name="quantity" value="<%=product.quantity%>">
+                                            <label for="title">Banner Title</label>
+                                            <input type="text" class="form-control" id="title" name="title" value="<%= data.title %>" required>
                                         </div>
                                         <div class="form-group">
-                                            <label>Category</label>
-                                            <select class="form-control" id="product-category" name="category">
-                                                         <option value="<%= product.category.name %>"><%=product.category.name %></option>
-                                                <% for (let i = 0; i < category.length; i++) { %>
-                                                        <option value="<%= category[i].name %>"><%= category[i].name %></option>
-                                                <% } %>
-                                            </select>
-
-
-                                            
-                                        </div>
-                                        
-                                        <div class="form-group">
-                                            <label>Price</label>
-                                            <input type="text" class="form-control" name="price" value="<%=product.price%>">
+                                            <label for="description">Banner Description</label>
+                                            <input type="text" class="form-control" id="description" name="description" value="<%= data.description %>" required>
                                         </div>
                                         <div class="form-group">
-                                            <label for="offer">Offer</label>
-                                            <input type="text" class="form-control" value="<%=product.offer%>" id="offer" name="offer" >
+                                            <label>Current Banner Image</label>
+                                            <img src="/public/assets/images/banner/<%= data.image %>" alt="Current Banner Image" class="current-image">
                                         </div>
+                                
                                         <div class="form-group">
-                                            <label>Description</label>
-                                            <input type="text" class="form-control" value="<%=product.description%>" name="description" required>   
+                                            <label for="image">Upload New Banner Image</label>
+                                            <input type="file" class="form-control" id="image" name="image12"  required>
                                         </div>
-                                        <div class="row d-flex justify-content-center ">
-                                            <div class="row d-flex justify-content-between ">
-                                                <div class="col-lg-3 col-md-6 rounded-image-preview">
-                                                    <label for="imageInput1" class="image-label">Image 1
-                                                        <div class="rounded-image-preview">
-                                                            <img id="imagePreview1" src="/public/assets/images/products/sharpened/<%= product.images %>" alt="Preview" />
-                                                        </div>
-                                                        <input name="image1" type="file" accept="image/*" id="imageInput1" class="imageInput">
-                                                    </label>
-                                                </div>
-                                            </div>
-
+                                
+                                        <div class="form-group">
+                                            <label for="targeturl">Target URL</label>
+                                            <input type="text" class="form-control" id="targeturl" name="targeturl" value="<%= data.targeturl %>" required>
                                         </div>
+            
                                         <div class="form-group mt-3">
                                             <button type="submit" class="btn btn-primary">Submit</button>
-                                            <a href="product" class="btn btn-primary">
+                                            <a href="/admin/banner" class="btn btn-primary">
                                                 <span class="text">Back</span>
                                             </a>
                                         </div>
                                     </form>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
             
+
+
+
+            <div class="modal fade" id="cropperModal1" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel1" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cropperModalLabel1">Adjust Crop</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="cropperImage1" src="" alt="Crop" style="max-width: 100%;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="cropButton1">Crop Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal for Cropper 2 -->
+            <div class="modal fade" id="cropperModal2" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel2" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cropperModalLabel2">Adjust Crop</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="cropperImage2" src="" alt="Crop" style="max-width: 100%;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="cropButton2">Crop Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal for Cropper 3 -->
+            <div class="modal fade" id="cropperModal3" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel3" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cropperModalLabel3">Adjust Crop</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="cropperImage3" src="" alt="Crop" style="max-width: 100%;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="cropButton3">Crop Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal for Cropper 4 -->
+            <div class="modal fade" id="cropperModal4" tabindex="-1" role="dialog" aria-labelledby="cropperModalLabel4" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cropperModalLabel4">Adjust Crop</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <img id="cropperImage4" src="" alt="Crop" style="max-width: 100%;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="cropButton4">Crop Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            
+
+
+
+
      <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">
@@ -239,6 +313,15 @@
                 </div>
             </footer>
         </main>
+
+
+
+
+
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
         <script src="/public/assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="/public/assets/js/vendors/bootstrap.bundle.min.js"></script>
         <script src="/public/assets/js/vendors/select2.min.js"></script>
