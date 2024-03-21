@@ -74,7 +74,7 @@
                                     </li>
                                     <li><a href="about">About Us</a></li>
                                     <li><a href="contact">Contact Us</a></li>
-                                    <% if (locals.email) { %>
+                                    <% if (locals?.email) { %>
                                         <div>
                                             <a href="/account?<%= locals %>">
                                                 <div class="icon">
@@ -178,7 +178,7 @@
 
 
 <script>
-         let previousInputValue = '';
+    let previousInputValue = '';
 
 async function handleSearchInput(event) {
     const partialInput = document.getElementById('searchInput').value;
@@ -190,17 +190,18 @@ async function handleSearchInput(event) {
         // If other keys are pressed, perform autocomplete and send query to the backend
         if (partialInput !== previousInputValue) {
             const response = await fetch(`/search?input=${partialInput}`);
-            const data = await response.json();
-            displayAutocompleteSuggestions(data.suggestions);
-            
-            // Note: sendSearchQueryToBackend is not needed in this case
-            // Backend query will be handled when navigating to /shop
+            if (response.ok) {
+                const data = await response.json();
+                displayAutocompleteSuggestions(data.suggestions);
+            } else {
+                console.error('Failed to fetch autocomplete suggestions');
+            }
             previousInputValue = partialInput;
         }
     }
 }
 
-    function displayAutocompleteSuggestions(suggestions) {
+function displayAutocompleteSuggestions(suggestions) {
     const partialInput = document.getElementById('searchInput').value.toLowerCase();
 
     // If the input is empty, hide the suggestions and return
@@ -235,14 +236,21 @@ async function handleSearchInput(event) {
             document.getElementById('searchInput').value = suggestion.name;
             // Clear the suggestions list
             suggestionsList.innerHTML = '';
+            // Hide the suggestions container
+            document.querySelector('.suggestions-container').style.display = 'none';
+            // Navigate to the search URL
+            window.location.href = `/shop?search=${suggestion.name}`;
         });
     });
 
     // Show or hide the suggestions container based on whether there are suggestions
     document.querySelector('.suggestions-container').style.display = suggestions.length > 0 ? 'block' : 'none';
 }
-        </script>
 
+// Attach the handleSearchInput function to the input field's input event
+document.getElementById('searchInput').addEventListener('input', handleSearchInput);
+
+</script>
 
 
 
@@ -267,7 +275,7 @@ async function handleSearchInput(event) {
                             <div class="toolbox">
                                 <div class="toolbox-left">
                                     <div class="toolbox-info">
-                                        Showing <span>9 of <%= product.length%></span> Products
+                                        Showing <span>9 of <%= product?.length%></span> Products
                                     </div><!-- End .toolbox-info -->
                                 </div><!-- End .toolbox-left -->
 
@@ -287,7 +295,7 @@ async function handleSearchInput(event) {
 
                             <div class="products mb-3">
                                 <div  id="productContainer" class="row justify-content-center">
-                                    <% if (product.length > 0) { %>  
+                                    <% if (product?.length > 0) { %>  
                                   <% let counter = 0; %>
                                   <% product.forEach(product => { %>
                                     <div class="col-12 col-md-6 col-lg-4 col-xl-4">
@@ -372,8 +380,8 @@ async function handleSearchInput(event) {
                                             <% category.forEach(category => { %>
                                                 <div class="filter-item">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" class="custom-control-input" id="<%= `category-${category._id}` %>" name="category" value="<%= category._id %>">
-                                                        <label class="custom-control-label" for="<%= `category-${category._id}` %>"><%= category.name %></label>
+                                                        <input type="radio" class="custom-control-input" id="<%= `category-${category.name}` %>" name="category" value="<%= category.name %>">
+                                                        <label class="custom-control-label" for="<%= `category-${category.name}` %>"><%= category.name %></label>
                                                     </div>
                                                 </div>
                                             <% }) %>                                            

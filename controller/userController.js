@@ -10,8 +10,8 @@ const objectID = require("mongodb").objectID;
 const { name } = require("ejs");
 
 const accountSid = "AC1985e94c73acdc5f1a3f408c8cad231a";
-const authToken = "507a2d6b03f5e7658f85d306de19b592";
-const verifySid = "VA2daca26d9d84268f6700c93859333e0e";
+const authToken = "b86b56b8ffc6469ad93667edf085cd50";
+const verifySid = "VA8b213e33417f99a120bc1f9f78610a82";
 const client = require("twilio")(accountSid, authToken);
 
 module.exports = {
@@ -248,6 +248,30 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
+  },
+  productSearch: async (req, res) => {
+    try {
+      const productName = req.query.input.toLowerCase();
+      console.log(productName);
+      const matchingProducts = await Product.find({
+        name: { $regex : productName, $options: 'i' },
+      });
+      console.log(matchingProducts);
+      res.json({ suggestions: matchingProducts });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  },
+
+  userLogout : async (req,res)=>{
+    try {
+      req.session.destroy()
+      res.redirect('/')
+    } catch (error) {
+      console.log(error.message);
+    }
   }
+  
 
 };

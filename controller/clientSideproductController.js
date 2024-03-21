@@ -20,12 +20,36 @@ const { ObjectId } = require('mongodb')
 module.exports={
     shopLoad: async (req,res)=>{
         try {
+            let showProducts;
             const user = req.session.userId
-            const locals = await User.findOne({_id:user})
-            const category = await Category.find()
-            const product = await Product.find()
-            const cart   = await Cart.findOne({user:user})
-            res.render('user/shop',{product,totalPages:'',category,locals,cart})
+            const searchValue = req.query.search
+            const categoriesValue = req.query.category
+            const sortedprice = req.query.priceFilter
+            if(searchValue || categoriesValue || sortedprice){
+
+                if(searchValue){
+                    showProducts = await Product.find({
+                    name: { $regex : searchValue, $options: 'i' },
+                    });   
+                } 
+                if(categoriesValue){
+                    showProducts = await Product.find({category:categoriesValue})
+                }
+                if(sortedprice){
+                    if(sortedprice == 'high-to-low'){
+                        showProducts = await Product.find({}).sort({price:-1})
+                    }else if (sortedprice == 'low-to-high'){
+                        showProducts = await Product.find({}).sort({price: 1})
+                    }
+                }
+            }else{
+            showProducts = await Product.find()  
+        }
+        const locals = await User.findOne({_id:user})   
+        const category = await Category.find()
+        const cart   = await Cart.findOne({user:user})
+
+            res.render('user/shop',{product:showProducts,totalPages:'',category,locals,cart})
         } catch (error) {
             console.log(error);
         }

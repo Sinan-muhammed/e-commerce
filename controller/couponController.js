@@ -132,5 +132,17 @@ module.exports = {
       console.log(error);
     }
   },
+  removecoupon : async (req,res)=>{
+    try {
+      const userId = req.session.userId
+      const cartData = await Cart.findOne({user:userId})
+      await Coupon.findOneAndUpdate({_id:cartData.couponDiscount},{$pull:{usedUsers:userId}})
+      await Cart.findOneAndUpdate({user:userId},{$set:{couponDiscount:0}})
+      res.json({remove:true})
+    } catch (error) {
+      console.log(error.message);
+      res.render('500Error')
+    }
+  }
   
 };

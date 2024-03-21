@@ -79,14 +79,18 @@ router.post('/cancelproduct',OrderController.cancelProduct)
 router.post('/returnproduct',OrderController.returnProduct)
 
 router.post('/checkcoupon',Couponcontroller.checkcoupon)
+router.post('/removecoupon',Couponcontroller.removecoupon)
 
 router.get('/about',userController.loadAbout)
 router.get('/faq',userController.loadfaq)
 router.get('/contact',userController.loadcontact)
 
+router.get('/search',userController.productSearch)
+
 router.get('/invoice',productController.loadInvoice)
 router.post('/submit-review',reviewController.addreview)
 router.post('/vote',reviewController.voting)
-// router.get('/logout',userRouter)
+
+router.get('/logout',userController.userLogout)
 
 module.exports = router;
