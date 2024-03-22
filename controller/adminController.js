@@ -52,7 +52,7 @@ module.exports={
                 const admin = await adminData.findOne({email:email})
                 console.log(admin);
 
-                req.session.adminId = admin.id
+                req.session.adminId = admin._id
                 console.log(req.session.adminId);
 
                 if(admin){
@@ -66,14 +66,13 @@ module.exports={
 
     adminDashboardGET: async (req,res)=>{
         
-        const totalRevenueNumber=[]
+        
         const ordercount= await Order.find({}).countDocuments()
         const productcount= await Product.find({}).countDocuments()
-        const monthlyRevenueNumber=[]
         const order= await Order.find().populate('userId')
         const categorycount= await Category.find({}).countDocuments()
 
-        res.render('admin/dashboard',{totalRevenueNumber,order,ordercount,productcount,monthlyRevenueNumber,categorycount})
+        res.render('admin/dashboard',{order,ordercount,productcount,categorycount})
     },
 
     usersGET:async (req,res)=>{
@@ -158,9 +157,64 @@ module.exports={
             res.status(500).json({message:"Internal server error"})
             console.log(error);
         }
+    },
+    Logout: async(req,res)=>{
+        try {
+            req.session.destroy()
+            res.redirect('/admin');
+        } catch (error) {
+            console.log(error.message);
+        }
+    },
+
+    chartData: async(req,res)=>{
+        try {
+            const salesData = await Order.aggregate([
+                {$match:{'products.productstatus':'Delivered'}},
+                {$group:{
+                    _id:{$month:'$purchaseDate'},
+                    totalAmount:{$sum:'$totalAmount'}
+                }},
+                {$project:{
+                    _id:0,
+                    month:'$_id',
+                    totalAmount:1
+                }},
+                {
+                    $sort:{month:1}
+                }
+            ])
+
+            console.log(salesData);
+
+            res.json(salesData)
+        } catch (error) {
+            console.error('Error fetching data from database:', error.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    
+    paymentChart: async(req,res)=>{
+        try {
+            const paymentData = await Order.aggregate([
+                {
+                    $match:{"products.productstatus": "Delivered"}
+                },
+                {
+                    $group:{
+                        _id:'$paymentMethod',
+                        totalAmount:{$sum:'$totalAmount'}
+                    }
+                }
+            ])
+            console.log(paymentData);
+
+            res.json(paymentData)
+        } catch (error) {
+            console.error('Error fetching payment data from the database:', error.message);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     }
-
-
 }
 
 

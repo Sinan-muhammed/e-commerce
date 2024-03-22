@@ -1,6 +1,7 @@
 const User = require('../models/signupModel')
 const path = require('path')
 const ejs   = require('ejs')
+const bcrypt = require('bcrypt')
 const  puppeteer = require('puppeteer')
 const browser    = require('browser')
 const Product = require('../models/productmodel')
@@ -107,7 +108,46 @@ module.exports={
         }
     },
 
-    
+    passwordchange : async(req,res)=>{
+            try {
+                const userData = await User.findById(req.session.userId)
+
+                if(req.body.currentpassword ||(req.body.newpassword && req.body.newpassword2)){
+                    if(!req.body.newpassword || req.body.newpassword.trim()==='' || !req.body.newpassword2 || req.body.newpassword2.trim()===''){
+                        return res.render('user/account',{message: 'New passwords cannot be empty.'})
+                    }
+
+                    if(req.body.newpassword !== req.body.newpassword2){
+                        return res.render('user/account',{message: 'New passwords do not match.'})
+                    }
+
+                    if(req.body.newpassword.length<8){
+                        return res.render('user/account',{message: 'New password must be at least 8 characters long.'})
+                    }else{
+                        const matchPassword = await bcrypt.compare(req.body.currentpassword, userData.password)
+
+                        if(matchPassword){
+                            sPassword = await securePassword(req.body.newpassword)
+                        }else{
+                            return res.render('user/account',{message:'Please enter either a current password or new passwords.'})
+                        }
+                    }
+                }else{
+                    sPassword = userData.password
+                    return res.render('user/account',{message:'Please enter either a current password or new passwords.'})
+                }
+                await User.findOneAndUpdate(
+                    {email:userData.email},
+                    {
+                        $set:{password:sPassword}
+                    },
+                    {new:true}
+                )
+                res.redirect('/account')
+            } catch (error) {
+                console.log(error);
+            }
+    },
    
     loadInvoice: async (req,res)=>{
         try {

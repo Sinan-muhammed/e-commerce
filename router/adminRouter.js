@@ -1,5 +1,6 @@
 const express=require('express')
 const router = express.Router()
+const session = require("express-session");
 const adminCantrollers  = require('../controller/adminController')
 const categoryCantrollers = require("../controller/categoryController")
 const productCantrollers = require("../controller/productcontroller")
@@ -7,8 +8,15 @@ const bannerControllers = require('../controller/bannerContrller')
 const couponControllers = require('../controller/couponController')
 const {upload,uploadBanner,uploadBranded} = require('../middlewares/multer')
 const brandedBannerController = require('../controller/brandedBannerController')
+const adminauth = require('../middlewares/adminauth')
 
-
+router.use(
+    session({
+        secret:'mine',
+        resave:false,
+        saveUninitialized:true
+    })
+)
 
 router.get('/ad-signup',adminCantrollers.signupGet)
 router.post('/ad-signup',adminCantrollers.signupPost)
@@ -71,8 +79,10 @@ router.post('/editbrand',uploadBranded.single('image12'),brandedBannerController
 router.get('/order',adminCantrollers.orderGet)
 router.get('/showorder',adminCantrollers.showOrder)
 router.post('/updateProductStatus',adminCantrollers.updatestatus)
+router.get('/chart',adminCantrollers.chartData)
+router.get('/paymentChart',adminCantrollers.paymentChart)
 
-// router.get('/logout',adminCantrollers.adminLogout)
+router.get('/logout',)
 
 
 module.exports=router

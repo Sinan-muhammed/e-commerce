@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="header-right">
-                        <% if (locals.email) { %>
+                        <% if (locals?.email) { %>
                             <div>
                                 <a href="/account?<%= locals %>">
                                     <div class="icon">
@@ -86,7 +86,7 @@
                         <% } %>
 
                         <div class="dropdown cart-dropdown">
-                            <% if(locals.email){ %>
+                            <% if(locals?.email){ %>
                                 <a href="/cart" class="dropdown-toggle" >
                                     <div class="icon">
                                         <i class="icon-shopping-cart"></i>

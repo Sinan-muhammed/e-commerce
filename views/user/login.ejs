@@ -170,6 +170,20 @@
                                         
                                         <form action="/login" method="post" >
                                             <div class="form-group">
+                                                <% if (typeof message !=='undefined' ) { %>
+                                                    <p id="message" style="color: rgb(255, 0, 0);">
+                                                        <%= message %>
+                                                    </p>
+                                                    <script>
+                                                        // Set a timer to remove the message after 5000 milliseconds (5 seconds)
+                                                        setTimeout(function () {
+                                                            var messageElement = document.getElementById('message');
+                                                            if (messageElement) {
+                                                                messageElement.style.display = 'none';
+                                                            }
+                                                        }, 3500);
+                                                    </script>
+                                                    <% } %>
                                                 <label for="email">Email *</label>
                                                 <input type="email" class="form-control" id="register-email-2" name="email" placeholder="Enter email" required>
                                                 <div class="invalid-feedback" id="email-error-message">

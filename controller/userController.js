@@ -7,18 +7,24 @@ const Cart    = require('../models/cartModel')
 const Banner  = require('../models/bannermodel')
 const Product = require('../models/productmodel')
 const objectID = require("mongodb").objectID;
+const crypto   = require('crypto')
 const { name } = require("ejs");
+const nodemailer = require('nodemailer');
+const dotenv =require('dotenv');
+const SMTPTransport = require("nodemailer/lib/smtp-transport");
+
+dotenv.config()
 
 const accountSid = "AC1985e94c73acdc5f1a3f408c8cad231a";
-const authToken = "b86b56b8ffc6469ad93667edf085cd50";
-const verifySid = "VA8b213e33417f99a120bc1f9f78610a82";
+const authToken = "0ada2a5d1b196bec912174bb113b4114";
+const verifySid = "VAe7e164f047af473093db647d1d07a0de";
 const client = require("twilio")(accountSid, authToken);
 
 module.exports = {
   homeGet: async (req, res) => {
     try {
 
-      if(req.session.userId){
+      
         const locals =await userData.findOne({_id:req.session.userId})
 
         const cart= await Cart.findOne({user:req.session.userId})
@@ -26,10 +32,7 @@ module.exports = {
         const product = await Product.find()
         res.render("user/home", { banner,locals,cart,product});
 
-      }
-      else{
-        res.redirect('/login')
-      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -217,6 +220,50 @@ module.exports = {
       console.log(error);
     }
   },
+  forgetPost: async (req,res)=>{
+   try {
+    const email = req.body.email
+    const user = await userData.findOne({email:email})
+    if(!user){
+      res.render('user/forgot',{message:'User not found'})
+    }else{
+      const token = crypto.randomBytes(20).toString('hex')
+      user.resetToken = token
+      user.resetTokenExpiry = Date.now() + 300000
+      await user.save()
+      const resetLink = `http://localhost:3001/resetPassword${token}`
+      const transporter =nodemailer.createTransport(
+       new SMTPTransport({
+          service:'gmail',
+          auth:{
+            user:process.env.email_user,
+            pass:process.env.password_user
+          },
+          tls:{
+            rejectUnauthorized: false
+          }
+        })
+      )
+      const mailOptions = {
+          from: process.env.email_user,
+          to: email,
+          subject:'Password Reset',
+          html: `
+                  <p>Dear User,</p>
+                  <p>We received a request to reset your password. Click the following link to proceed:</p>
+                  <a href="${resetLink}" style="text-decoration: none; color: #007BFF; font-weight: bold;">Reset Your Password</a>
+                  <p>If you didn't initiate this request, please ignore this email.</p>
+                  <p>Thank you,</p>
+                  <p>CartFurnish</p>
+      `,
+      }
+      await transporter.sendMail(mailOptions)
+      res.render('user/login',{message:'verification mail have been send'})
+    }
+   } catch (error) {
+    console.log(error);
+   }
+  },
 
   loadResetPassword: async (req,res)=>{
     try {
@@ -224,6 +271,33 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
+  },
+  ResetPasswordpost : async (req,res)=>{
+      try {
+        const token = req.body.token
+        const pass1 = req.body.password1
+        const pass2 = req.body.password2
+        const user = await userData.findOne({resetToken:token,resetTokenExpiry:{ $gt:Date.now()}})
+
+        if(pass1 !== pass2){
+          res.render('user/resetPassword',{message:'Passwords do not match!',token})
+        }else{
+          const newPasswordHash = await bcrypt.hash(pass1,10)
+
+          if(await bcrypt.compare(pass1,user.password)){
+            res.render('user/resetPassword',{message:'Your old password and new password are the same!',token})
+          }else{
+            user.password = newPasswordHash
+            user.resetToken = null
+            user.resetTokenExpiry = null
+            await user.save()
+            res.render('user/login')
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+      }
   },
  
   loadAbout: async (req,res)=>{
