@@ -339,7 +339,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="product-review-link" data-toggle="tab" href="#product-review-tab"
-                                role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews (<%=review.length%>)</a>
+                                role="tab" aria-controls="product-review-tab" aria-selected="false">Reviews (<%=review?.length%>)</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -368,7 +368,7 @@
                         <div class="tab-pane fade" id="product-review-tab" role="tabpanel" aria-labelledby="product-review-link">
                             <% if (review && review.length>0) { %>
                                 <div class="reviews">
-                                    <h3>Reviews (<%= review.length %>)</h3>
+                                    <h3>Reviews (<%= review?.length %>)</h3>
                                     <% review.forEach((reviewItem) => { %>
                                         <div class="review">
                                             <div class="row no-gutters">
@@ -398,7 +398,7 @@
                                                     <h4><%= reviewItem.comment %></h4>
                                                     <div class="review-action">
                                                         <button onclick="vote('like', '<%=reviewItem._id%>', '<%=reviewItem.productId%>')">
-                                                            <i class="icon-thumbs-up"></i> Like (<span id="likeCount">2</span>)
+                                                            <i class="icon-thumbs-up"></i> Like (<span id="likeCount">0</span>)
                                                         </button>
                                                         <button onclick="vote('dislike', '<%=reviewItem._id%>', '<%=reviewItem.productId%>')">
                                                             <i class="icon-thumbs-down"></i> Dislike (<span id="dislikeCount">0</span>)

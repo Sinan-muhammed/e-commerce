@@ -6,6 +6,7 @@ const userData = require("../models/signupModel");
 const Cart    = require('../models/cartModel')
 const Banner  = require('../models/bannermodel')
 const Product = require('../models/productmodel')
+const Brandded = require('../models/brandedModel')
 const objectID = require("mongodb").objectID;
 const crypto   = require('crypto')
 const { name } = require("ejs");
@@ -30,7 +31,8 @@ module.exports = {
         const cart= await Cart.findOne({user:req.session.userId})
         const banner = await Banner.find({}) ;
         const product = await Product.find()
-        res.render("user/home", { banner,locals,cart,product});
+        const branded = await Brandded.find({})
+        res.render("user/home", { banner,locals,cart,product,branded});
 
       
     } catch (error) {
