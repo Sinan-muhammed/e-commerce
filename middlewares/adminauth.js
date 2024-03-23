@@ -3,13 +3,13 @@ module.exports = {
     isLogin : (req,res,next)=>{
         try {
           if(req.session.adminId){
-              nex()
+              next()
           }else{
-              res.redirect('/admin')
+              res.redirect('/admin/ad-login')
           }
         } catch (error) {
           console.error(error.message);
-          res.redirect('/admin/login')
+          res.redirect('/admin/ad-login')
         }
   },
   isLogout: (req,res,next)=>{

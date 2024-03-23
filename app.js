@@ -19,7 +19,7 @@ app.use("/", userRouter);
 app.use("/admin", adminRouter);
 
 // MongoDB connection configuration
-const dburl = "mongodb://localhost:27017/e-commerce";
+const dburl = process.env.mongodb
 
 // Connect to MongoDB
 mongoose

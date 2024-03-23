@@ -64,10 +64,7 @@ module.exports={
             const cart = await Cart.findOne({user:req.session.userId})
             const product = await Product.findOne({_id:productId})
 
-           const review = await reviewModel.aggregate([
-                { $match: { productId: productId } }
-            ]);
-
+           const review = await reviewModel.find({})
             console.log(review,'review');
             res.render('user/product',{product,review,locals,cart})
         } catch (error) {
